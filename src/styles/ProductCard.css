@@ -1,0 +1,513 @@
+/* Product Card Styles */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  color: #333;
+  height: 100%;
+  border: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.product-card-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   CONTENEDOR DE IMAGEN CON DIMENSIONES FIJAS
+   ============================================ */
+.product-image-container {
+  position: relative;
+  width: 100%;
+  height: 220px; /* Altura fija en desktop */
+  background: #fff;
+  overflow: hidden;
+  flex-shrink: 0; /* No permitir que se comprima */
+}
+
+.image-placeholder {
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+}
+
+.product-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.product-card:hover .product-image {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.image-skeleton {
+  width: 100%; 
+  height: 100%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.out-of-stock {
+  position: absolute; 
+  top: 8px; 
+  left: 8px;
+  background: #e74c3c; 
+  color: white;
+  padding: 0.35rem 0.7rem; 
+  border-radius: 3px;
+  font-weight: bold; 
+  font-size: 0.7rem;
+  z-index: 10;
+}
+
+/* ✅ ETIQUETA DE DESCUENTO */
+.discount-badge {
+  background: linear-gradient(135deg, #ff9500, #ff7700);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 8px rgba(255, 119, 0, 0.3);
+  white-space: nowrap;
+}
+
+.product-overlay {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  opacity: 0; 
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.product-card:hover .product-overlay { 
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.add-to-cart-btn {
+  background: #667eea; 
+  color: white; 
+  border: none;
+  padding: 0.75rem 1.5rem; 
+  border-radius: 4px;
+  cursor: pointer; 
+  font-weight: bold;
+  display: flex; 
+  align-items: center; 
+  gap: 0.5rem;
+  transition: background 0.3s;
+  pointer-events: auto;
+  position: relative;
+  z-index: 25;
+}
+
+.add-to-cart-btn:hover:not(:disabled) { 
+  background: #764ba2; 
+}
+
+.add-to-cart-btn:disabled { 
+  background: #95a5a6; 
+  cursor: not-allowed; 
+}
+
+/* ============================================
+   INFO DEL PRODUCTO
+   ============================================ */
+.product-info {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-height: 140px; /* Altura mínima para consistencia */
+}
+
+.product-name {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 0.3rem 0;
+  height: 2.6rem; /* Altura fija para 2 líneas */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-category {
+  margin: 0;
+  color: #95a5a6;
+  font-size: 0.8rem;
+}
+
+.product-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.3rem 0;
+  min-height: 1.5rem; /* Espacio reservado aunque no haya tags */
+}
+
+.tag-card {
+  background: #f1f2f6;
+  color: #576574;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.product-price {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-weight: bold;
+  font-size: 1.35rem;
+  color: #0277c5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+/* ✅ PRECIO CON DESCUENTO */
+.price-discount {
+  font-size: 1.4rem;
+  color: #ff854d;
+  font-weight: 900;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.price-original {
+  font-size: 0.85rem;
+  color: #95a5a6;
+  text-decoration: line-through;
+  font-weight: 600;
+}
+
+.price {
+  font-size: 1.35rem;
+  color: #0277c5;
+  font-weight: bold;
+}
+
+/* ============================================
+   BOTÓN DE FAVORITO
+   ============================================ */
+.favorite-btn {
+  position: absolute; 
+  top: 10px; 
+  right: 10px;
+  width: 36px; 
+  height: 36px;
+  border-radius: 50%; 
+  background: white;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer; 
+  z-index: 30;
+  transition: all 0.2s;
+  color: #cbd5e0; 
+  font-size: 1.2rem;
+  padding: 0;
+  pointer-events: auto;
+}
+
+.favorite-btn svg {
+  width: 20px; 
+  height: 20px; 
+  display: block;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1); 
+  background: #fff;
+  color: #f1c40f; 
+  border-color: #f1c40f;
+}
+
+.favorite-btn.active {
+  color: #f1c40f; 
+  border-color: #f1c40f; 
+  background: #fffdf0;
+}
+
+/* ============================================
+   RESPONSIVE - MÓVIL
+   ============================================ */
+@media (max-width: 768px) {
+  .product-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .product-card:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Imagen con dimensiones fijas en móvil */
+  .product-image-container {
+    height: 140px; /* Altura fija menor en móvil */
+  }
+
+  .product-image {
+    max-width: 85%;
+    max-height: 85%;
+  }
+
+  .product-card:hover .product-image {
+    transform: translate(-50%, -50%); /* Sin scale en móvil */
+  }
+
+  /* Botón flotante redondo */
+  .product-overlay {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+    background: transparent;
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  .add-to-cart-btn {
+    pointer-events: auto;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  }
+
+  .add-to-cart-btn svg {
+    width: 18px;
+    height: 18px;
+    color: white;
+  }
+
+  .add-to-cart-btn .btn-text {
+    display: none;
+  }
+
+  .discount-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .product-info {
+    padding: 0.7rem;
+    gap: 0.2rem;
+    min-height: 110px; /* Altura mínima menor en móvil */
+  }
+
+  .product-name {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    height: 2.4em; /* Altura fija para 2 líneas */
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    margin-bottom: 0.2rem;
+  }
+
+  .product-category {
+    display: none;
+  }
+
+  .product-tags {
+    min-height: 1.2rem;
+    gap: 0.2rem;
+    margin: 0.2rem 0;
+  }
+
+  .tag-card {
+    padding: 0.15rem 0.3rem;
+    font-size: 0.55rem;
+  }
+
+  .product-price {
+    margin-top: auto;
+    padding-top: 0.4rem;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .price-discount {
+    font-size: 0.95rem;
+    color: #ff854d;
+    font-weight: 900;
+  }
+
+  .price-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .price-original {
+    font-size: 0.75rem;
+    color: #95a5a6;
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+
+  .price {
+    font-size: 0.95rem;
+  }
+
+  /* Botón favorito más pequeño */
+  .favorite-btn {
+    width: 30px;
+    height: 30px;
+    top: 5px;
+    right: 5px;
+    font-size: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+
+  .favorite-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Móviles muy pequeños y ajuste para 422px */
+@media (max-width: 480px) {
+  .product-image-container {
+    height: 130px; /* Altura optimizada para pantallas angostas */
+  }
+
+  .product-info {
+    padding: 0.5rem 0.4rem; /* Padding optimizado */
+    min-height: 105px;
+    gap: 0.15rem;
+  }
+
+  .product-name {
+    font-size: 0.72rem; /* Tamaño de fuente ajustado */
+    height: 2.2em;
+    line-height: 1.15;
+    margin-bottom: 0.15rem;
+  }
+
+  .product-tags {
+    min-height: 1rem;
+    gap: 0.15rem;
+    margin: 0.15rem 0;
+  }
+
+  .tag-card {
+    padding: 0.12rem 0.25rem;
+    font-size: 0.5rem;
+  }
+
+  .product-price {
+    padding-top: 0.3rem;
+    gap: 0.15rem;
+  }
+
+  .price-discount {
+    font-size: 0.88rem;
+  }
+
+  .price {
+    font-size: 0.88rem;
+  }
+
+  .price-original {
+    font-size: 0.7rem;
+  }
+
+  .discount-badge {
+    font-size: 0.55rem;
+    padding: 0.15rem 0.3rem;
+  }
+
+  .add-to-cart-btn {
+    width: 32px;
+    height: 32px;
+    bottom: 4px;
+    right: 4px;
+  }
+
+  .add-to-cart-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .favorite-btn {
+    width: 28px;
+    height: 28px;
+    top: 4px;
+    right: 4px;
+  }
+
+  .favorite-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .out-of-stock {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.5rem;
+    top: 4px;
+    left: 4px;
+  }
+}

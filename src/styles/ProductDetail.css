@@ -1,0 +1,487 @@
+/* Product Detail Page Styles */
+.product-detail-page {
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.detail-container {
+  display: grid;
+  grid-template-columns: 600px 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  align-items: flex-start;
+}
+
+.detail-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 600px;
+  height: 600px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.detail-image img:hover {
+  transform: scale(1.02);
+}
+
+.detail-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;  
+}
+
+.detail-info h1 {
+  margin: 0 0 1rem;
+  color: #2c3e50;
+  font-size: 2rem;
+}
+
+.product-title-with-favorite {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  max-width: 100%; 
+}
+
+.product-title-with-favorite h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 2rem;
+  flex: 1;
+  min-width: 0;
+  
+  /* --- CAMBIOS PARA 2 LÍNEAS Y ROMPER PALABRAS --- */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;        /* Cortar en la 2da línea */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;       
+  word-break: break-word;
+  line-height: 1.2;            
+}
+
+.detail-info .description p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+  font-size: 1rem;
+  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.favorite-btn-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #666;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.favorite-btn-detail:hover {
+  border-color: #ffc107;
+  color: #ffc107;
+  background: #fff8f0;
+}
+
+.favorite-btn-detail.active {
+  border-color: #ffc107;
+  color: #ffc107;
+  background: #fff8f0;
+}
+
+.favorite-btn-detail svg {
+  font-size: 1.2rem;
+}
+
+.favorite-text {
+  font-weight: 500;
+}
+
+.detail-info .description {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.detail-info .description p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* Product Metadata */
+.product-metadata {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.metadata-item {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.metadata-label {
+  font-weight: 600;
+  color: #2c3e50;
+  min-width: 120px;
+}
+
+.metadata-value {
+  color: #666;
+}
+
+.category {
+  color: #95a5a6;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tag {
+  background: #ecf0f1;
+  color: #2c3e50;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.description {
+  margin-bottom: 1.5rem;
+}
+
+.description h3 {
+  margin: 0 0 0.5rem;
+  color: #2c3e50;
+}
+
+.description p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.specifications {
+  margin-bottom: 1.5rem;
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.specifications h3 {
+  margin: 0 0 1rem;
+  color: #2c3e50;
+}
+
+.specifications ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.specifications li {
+  padding: 0.5rem 0;
+  color: #555;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.specifications li:last-child {
+  border-bottom: none;
+}
+
+.detail-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 0;
+  border-top: none;
+}
+
+.price-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.price-detail {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #667eea;
+}
+
+/* ✅ ESTILOS PARA DESCUENTOS */
+.price-with-discount {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.price-detail-discount {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #f37c2c;
+}
+
+.price-detail-original {
+  font-size: 1.2rem;
+  color: #95a5a6;
+  text-decoration: line-through;
+  font-weight: 600;
+}
+
+.discount-label {
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, #ff9500, #ff7700);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-weight: bold;
+  display: inline-block;
+  width: fit-content;
+}
+
+.stock {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.quantity-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity-section label {
+  font-weight: 600;
+}
+
+.quantity-section input {
+  width: 80px;
+  padding: 0.5rem;
+  border: 1px solid #ecf0f1;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.add-to-cart {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-to-cart:hover:not(:disabled) {
+  background: #764ba2;
+}
+
+.add-to-cart:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Product Details Section - Dos columnas */
+.product-details-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #ecf0f1;
+}
+
+.details-column {
+  flex: 1;
+}
+
+.detailed-description h2,
+.specifications h2 {
+  margin: 0 0 1rem;
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.detailed-description p {
+  color: #555;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* Similar Products */
+.similar-products {
+  padding-top: 2rem;
+  border-top: 1px solid #ecf0f1;
+}
+
+/* Image Modal */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 90vh;
+  border-radius: 8px;
+}
+
+.close-modal {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: white;
+  border: none;
+  font-size: 2rem;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-modal:hover {
+  background: #ecf0f1;
+}
+
+@media (max-width: 768px) {
+  .detail-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .detail-image {
+    width: 100%;
+    height: 400px;
+    position: relative;
+  }
+
+  /* En mobile, el botón favorito está dentro de detail-image y se posiciona en la esquina */
+  .detail-image .product-title-with-favorite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin-bottom: 0;
+    gap: 0;
+  }
+
+  .detail-image .product-title-with-favorite h1 {
+    display: none;
+  }
+
+  .detail-image .favorite-btn-detail {
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .detail-image .favorite-text {
+    display: none;
+  }
+
+  /* Mostrar el título en detail-info pero sin el botón favorito */
+  .detail-info .product-title-with-favorite {
+    display: block;
+  }
+
+  .detail-info .product-title-with-favorite h1 {
+    display: block;
+    font-size: 1.5rem;
+  }
+
+  .detail-info .favorite-btn-detail {
+    display: none;
+  }
+
+  .product-details-section {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* En web, el botón favorito está fuera de la imagen en el titulo */
+@media (min-width: 769px) {
+  .detail-image .product-title-with-favorite {
+    display: none;
+  }
+
+  .detail-info .product-title-with-favorite {
+    display: flex;
+  }
+
+  .detail-info .favorite-btn-detail {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+  }
+
+  .detail-info .favorite-text {
+    display: inline;
+  }
+}

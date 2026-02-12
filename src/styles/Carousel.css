@@ -1,0 +1,221 @@
+/* Carousel Styles */
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  background: #f5f5f5;
+
+  border-radius: 16px; 
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  cursor: pointer;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slide-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  padding: 2rem;
+  color: white;
+}
+
+.slide-overlay h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Carousel Controls */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+  z-index: 10;
+  border-radius: 50%; 
+}
+
+.carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-btn.prev {
+  left: 20px;
+}
+
+.carousel-btn.next {
+  right: 20px;
+}
+
+/* Indicators */
+.carousel-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.indicator.active {
+  background: rgba(255, 255, 255, 1);
+}
+
+.indicator:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+  .carousel {
+    /* IMPORTANTE: Quitamos la altura fija o el aspect-ratio de banner */
+    height: auto;
+    
+    /* Define la forma de tu imagen móvil. 
+       Si subes imágenes cuadradas (1080x1080), usa 1/1.
+       Si son un poco más altas (tipo Instagram), usa 4/5. 
+    */
+    aspect-ratio: 6/4; 
+  }
+
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    /* Ahora usamos cover porque la caja (aspect-ratio) ya coincide con la forma de la imagen móvil */
+    object-fit: cover; 
+  }
+  
+  /* Ajuste opcional para el esqueleto de carga en móvil */
+  .skeleton-banner {
+    height: 100%;
+    aspect-ratio: 6/4; 
+  }
+  .carousel-btn {
+    width: 32px !important;       /* Círculo más pequeño */
+    height: 32px !important;
+    font-size: 14px !important;   /* Ícono de flecha más pequeño */
+    
+    /* Centrado perfecto del ícono */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Fondo un poco más transparente para tapar menos la imagen */
+
+  }
+
+  /* Pegarlas un poco más a los bordes para ganar espacio visual */
+  .carousel-btn.prev {
+    left: 4px !important;
+  }
+
+  .carousel-btn.next {
+    right: 4px !important;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+/* El contenedor principal en modo carga */
+.carousel.skeleton-container {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+  min-height: 200px;
+  
+  /* NUEVO: Bordes redondeados suaves */
+  border-radius: 16px; 
+  /* Opcional: Una sombra sutil para que coincida con el carrusel real si la tiene */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* El rectángulo brillante */
+.skeleton-banner {
+  width: 100%;
+  height: 400px; /* Altura Desktop */
+  
+  /* Aseguramos que el banner interno también respete el redondeado */
+  border-radius: 16px;
+
+  /* NUEVOS COLORES: Más oscuros para mayor contraste */
+  background: #e0e0e0; /* Color base gris medio */
+  background-image: linear-gradient(
+    to right,
+    #e0e0e0 0%,    /* Base */
+    #f5f5f5 20%,    /* Brillo más claro (casi blanco) */
+    #e0e0e0 40%,    /* Base */
+    #e0e0e0 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 2000px 100%; 
+  animation: shimmer 1.5s infinite linear; /* Un poco más rápido para que se note el brillo */
+}
+
+/* El rectángulo gris animado que simula el banner */
+.skeleton-banner {
+  width: 100%;
+  /* ALTURA: Ajusta esto para que coincida con la altura real de tus banners */
+  height: 400px; 
+  
+  /* El truco del gris en movimiento: */
+  background: #f6f7f8; /* Color base */
+  background-image: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 2000px 100%; 
+  animation: shimmer 2s infinite linear; /* La magia del movimiento */
+}

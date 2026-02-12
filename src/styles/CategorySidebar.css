@@ -1,0 +1,174 @@
+.category-sidebar {
+  background: rgb(255, 255, 255);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content; 
+  position: sticky;
+  top: 90px; 
+  max-height: calc(100vh - 110px); 
+  overflow-y: auto; 
+}
+
+/* Header del sidebar (Título) */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 0.75rem;
+  cursor: default; /* En PC no parece clickeable */
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+/* Icono del toggle móvil (oculto en PC) */
+.mobile-toggle-icon {
+  display: none; 
+  color: #667eea;
+  transition: transform 0.3s;
+}
+
+.sidebar-header-catalogo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 0.75rem;
+  cursor: default; /* En PC no parece clickeable */
+}
+
+.sidebar-header-catalogo h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+/* Icono del toggle móvil (oculto en PC) */
+.mobile-toggle-icon-catalogo {
+  display: none; 
+  color: #667eea;
+  transition: transform 0.3s;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ... Estilos de botones de categoría (sin cambios) ... */
+.category-item { border-bottom: 1px solid #ecf0f1; }
+.category-button {
+  width: 100%; padding: 1rem; background: none; border: none; text-align: left;
+  font-size: 1rem; cursor: pointer; display: flex; justify-content: space-between;
+  align-items: center; color: #2c3e50; font-weight: 600; transition: background 0.3s;
+}
+.category-button:hover { background: #f5f5f5; }
+.category-button .icon { transition: transform 0.3s; color: #667eea; }
+.category-button .icon.expanded { transform: rotate(180deg); }
+.subcategories { display: flex; flex-direction: column; background: #f9f9f9; border-left: 3px solid #667eea; }
+.subcategory-button {
+  padding: 0.75rem 1rem 0.75rem 2rem; background: none; border: none; text-align: left;
+  cursor: pointer; color: #555; font-size: 0.95rem; transition: background 0.3s, color 0.3s; width: 100%;
+}
+.subcategory-button:hover { background: #ecf0f1; color: #667eea; font-weight: 600; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .category-sidebar {
+    position: static;
+    margin-bottom: 0.8rem;
+    margin-top: 0.8rem;
+    padding: 1rem;
+    max-height: none; /* Quitamos el scroll interno en móvil */
+  }
+  .category-sidebar.overlay-mode {
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  /* Aseguramos que la lista aparezca inmediatamente sin bordes superiores raros */
+  .category-sidebar.overlay-mode .categories-list {
+    margin-top: 0;
+    border-top: none;
+    display: flex; /* Fuerza visualización inmediata */
+  }
+
+  .sidebar-header {
+    margin-bottom: 0; /* Quitamos margen si está cerrado */
+    border-bottom: none; /* Quitamos borde si está cerrado */
+    padding-bottom: 0;
+    cursor: pointer; /* Indicamos que es clickeable */
+  }
+
+  /* Mostramos el icono toggle en móvil */
+  .mobile-toggle-icon {
+    display: block;
+  }
+  
+  .mobile-toggle-icon.open {
+    transform: rotate(180deg);
+  }
+
+  /* Ocultamos la lista por defecto en móvil */
+  .categories-list {
+    display: none;
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+
+  /* Clase que se agrega cuando está abierto */
+  .categories-list.show-mobile {
+    display: flex;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-item {
+  height: 50px; /* Misma altura aprox que tus botones */
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  
+  /* El truco del gris en movimiento: */
+  background: #f6f7f8;
+  background-image: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 2000px 100%; 
+  animation: shimmer 2s infinite linear; /* La magia del movimiento */
+}
+
+/* Ajuste para que el skeleton respete el modo overlay/móvil */
+.category-sidebar.overlay-mode .skeleton-list {
+  margin-top: 0;
+}

@@ -1,0 +1,157 @@
+/* Home Page Styles */
+.home {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.home-content {
+  padding: 2rem 0;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.sidebar-products {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  padding: 0 1rem;
+  align-items: start;
+}
+
+.products-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  min-width: 0; 
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 1rem;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.section-subtitle {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Grid de productos destacados - Desktop */
+.products-grid-home {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas fijas en desktop */
+  gap: 1.5rem;
+  grid-auto-rows: 1fr; /* Todas las filas con la misma altura */
+}
+
+/* Estados de carga y sin productos */
+.loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.no-products {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999;
+}
+
+.no-products p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Pantallas grandes */
+@media (min-width: 1400px) {
+  .products-grid-home {
+    grid-template-columns: repeat(4, 1fr); /* 5 columnas en pantallas grandes */
+  }
+}
+
+/* Tablets - 3 columnas */
+@media (max-width: 1200px) {
+  .products-grid-home {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablets pequeñas */
+@media (max-width: 1024px) {
+  .sidebar-products {
+    grid-template-columns: 1fr; 
+  }
+}
+
+/* Móviles - 2 COLUMNAS FIJAS */
+@media (max-width: 768px) {
+  .home-content {
+    padding: 0;
+  }
+  
+  .sidebar-products {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .products-section {
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .section-header {
+    margin: 1rem 0 0.8rem 0;
+    padding: 0 0.3rem 0.8rem 0.3rem;
+  }
+  
+  .section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .section-subtitle {
+    display: none;
+  }
+
+  /* ⭐ GRID DE 2 COLUMNAS EXACTAS - CLAVE PARA MÓVIL */
+  .products-grid-home {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas exactas del mismo ancho */
+    gap: 0.5rem;
+    grid-auto-rows: 1fr; /* Todas las filas con la misma altura */
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .sidebar-products {
+    padding: 0 0.4rem;
+  }
+
+  .section-header h2 {
+    font-size: 1rem;
+  }
+
+  .products-grid-home {
+    gap: 0.4rem;
+  }
+}

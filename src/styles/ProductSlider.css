@@ -1,0 +1,169 @@
+.product-slider-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden; 
+  margin-bottom: 3rem;
+  background: #fff;
+  padding: 1rem 0;
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+  border-left: 4px solid #667eea;
+}
+
+.slider-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #2c3e50;
+  font-weight: 700;
+  padding-left: 10px;
+}
+
+.view-all-link {
+  font-size: 0.9rem;
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.view-all-link:hover {
+  color: #764ba2;
+}
+
+/* Contenedor principal del Slider */
+.slider-container-slick {
+  padding: 10px 5px;
+  position: relative;
+}
+
+/* Hacer que todos los slides tengan la misma altura */
+.slick-track {
+  display: flex !important;
+  align-items: stretch;
+}
+
+.slick-slide {
+  height: auto;
+  display: flex !important;
+  flex-direction: column;
+}
+
+.slick-slide > div,
+.slick-slide-item {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Espaciado entre tarjetas */
+.slick-slide-item {
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+/* Asegurar que ProductCard dentro del slider ocupe todo el alto */
+.slick-slide-item .product-card {
+  height: 100%;
+}
+
+/* Flechas tipo Promart */
+.slick-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+  color: #667eea;
+  font-size: 14px;
+}
+
+.slick-arrow:hover {
+  background-color: #667eea;
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.custom-prev {
+  left: -15px;
+}
+
+.custom-next {
+  right: -15px;
+}
+
+.slick-disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   RESPONSIVE - MÓVIL
+   ============================================ */
+@media (max-width: 768px) {
+  .product-slider-section {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0;
+  }
+  
+  .slider-header {
+    padding: 0 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .slider-header h2 {
+    font-size: 1.1rem;
+    padding-left: 8px;
+  }
+
+  .view-all-link {
+    font-size: 0.85rem;
+  }
+  
+  .slider-container-slick {
+    width: 100%;
+    padding: 5px 0;
+  }
+
+  /* Reducir padding entre slides en móvil */
+  .slick-slide-item {
+    padding: 0 4px;
+  }
+
+  /* Ocultar flechas en móvil */
+  .slick-arrow {
+    display: none !important;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .slider-header h2 {
+    font-size: 1rem;
+  }
+
+  .view-all-link {
+    font-size: 0.8rem;
+  }
+
+  .slick-slide-item {
+    padding: 0 3px;
+  }
+}

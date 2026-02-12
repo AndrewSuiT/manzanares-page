@@ -1,0 +1,361 @@
+.categories-page {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Layout Desktop: 3 columnas */
+.categories-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr 260px;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+/* Para páginas sin sidebars */
+.full-width-layout {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left-sidebar, .right-sidebar {
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+  z-index: 90; 
+}
+
+.center-content {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  min-height: 600px;
+  min-width: 0;
+}
+
+.main-header h1 {
+  font-size: 1.6rem;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  flex-wrap: wrap; 
+  align-items: center;
+  gap: 8px; 
+}
+
+.category-path {
+  color: #2c3e50;
+}
+
+/* El punto separador */
+.title-separator {
+  color: #bdc3c7;
+  font-weight: 300;
+  font-size: 1.4rem;
+}
+
+/* La marca en Naranja */
+.brand-highlight {
+  color: #e26d1f;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.results-count {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+/* GRID DE PRODUCTOS - Desktop */
+.products-grid {
+  display: grid;
+  /* ✅ Usamos minmax para asegurar un ancho mínimo decente, evitando que se vean muy flacas */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+  gap: 1rem; /* ✅ Reducido de 1.5rem a 1rem (menos separación) */
+  grid-auto-rows: 1fr;
+}
+
+.categories-page .products-grid {
+  display: grid;
+  /* Aumentamos el mínimo a 220px para que la tarjeta no sea tan angosta */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+  gap: 1rem; /* ✅ Reducido de 1.5rem o 2rem a solo 1rem */
+  padding: 0;
+}
+
+.categories-page .product-image-container {
+  height: auto !important; 
+  aspect-ratio: 1 / 1;  
+  width: 100%;
+}
+
+/* Opcional: Ajustar imagen interna para que se vea completa dentro del cuadrado */
+.categories-page .product-image {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.load-more-section {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f9f9f9;
+}
+
+.load-more-btn {
+  background: white;
+  border: 1px solid #667eea;
+  color: #667eea;
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.load-more-btn:hover { 
+  background: #667eea; 
+  color: white; 
+}
+
+.mobile-filter-buttons {
+  display: none;
+}
+
+.mobile-sidebar-overlay {
+  display: none;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Pantallas grandes */
+@media (min-width: 1400px) {
+  .products-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Tablets - 3 columnas */
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .categories-layout {
+    grid-template-columns: 220px 1fr;
+  }
+  
+  .right-sidebar { 
+    display: none; 
+  }
+}
+
+/* Móviles - 2 COLUMNAS FIJAS - EXACTAMENTE COMO HOME */
+@media (max-width: 768px) {
+  .categories-page { 
+    padding: 0; /* ← SIN PADDING como Home */
+    padding-bottom: 80px;
+  }
+
+  .categories-layout {
+    grid-template-columns: 1fr;
+    gap: 0.5rem; /* ← Igual que Home */
+  }
+
+  .left-sidebar, .right-sidebar { 
+    display: none;
+  }
+  
+  .center-content {
+    padding: 0; /* ← SIN PADDING como .products-section en Home */
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .main-header {
+    padding: 0 0.3rem; /* ← Padding solo en el header */
+  }
+
+  .main-header h1 {
+    font-size: 1.1rem; /* ← Igual que Home */
+    gap: 5px;
+  }
+  
+  .title-separator {
+    font-size: 1rem;
+  }
+
+  .results-count {
+    font-size: 0.85rem;
+    padding: 0 0 1rem 0; /* ← Sin padding lateral */
+    margin-bottom: 0.8rem;
+  }
+
+  /* ⭐ GRID DE 2 COLUMNAS EXACTAS - EXACTAMENTE COMO HOME */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 0.5rem; 
+    grid-auto-rows: 1fr;
+    padding: 0 0.5rem;
+  }
+
+  /* Botones flotantes */
+  .mobile-filter-buttons {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 2px solid #eee;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    z-index: 999;
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
+
+  .mobile-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.9rem;
+    border: 2px solid #667eea;
+    background: white;
+    color: #667eea;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mobile-btn:active {
+    background: #667eea;
+    color: white;
+    transform: scale(0.98);
+  }
+
+  .mobile-btn svg {
+    font-size: 1.2rem;
+  }
+
+  /* Overlay y Sidebar Modal */
+  .mobile-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .mobile-sidebar-overlay.active {
+    display: block;
+  }
+
+  .mobile-sidebar-panel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 320px;
+    background: white;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+    overflow-y: auto;
+    z-index: 1101;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .mobile-sidebar-panel.left {
+    left: 0;
+  }
+
+  .mobile-sidebar-panel.right {
+    right: 0;
+    left: auto;
+    transform: translateX(100%);
+  }
+
+  .mobile-sidebar-panel.active {
+    transform: translateX(0);
+  }
+
+  .mobile-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .mobile-sidebar-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .close-sidebar-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-sidebar-content {
+    padding: 1rem;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+/* Móviles pequeños - EXACTAMENTE COMO HOME */
+@media (max-width: 480px) {
+  .products-grid {
+    padding: 0 0.3rem; /* ← Igual que .sidebar-products en Home */
+    gap: 0.4rem; /* ← Igual que Home */
+  }
+
+  .main-header {
+    padding: 0 0.4rem;
+  }
+
+  .main-header h1 {
+    font-size: 1rem; /* ← Igual que Home */
+  }
+
+  .center-content {
+    overflow: hidden; 
+  }
+}

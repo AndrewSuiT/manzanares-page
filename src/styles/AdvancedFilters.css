@@ -1,0 +1,217 @@
+.advanced-filters {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 90px;
+  border: 1px solid #f0f0f0;
+  height: fit-content;
+  max-height: calc(100vh - 110px); 
+  overflow-y: auto;
+}
+
+/* Nuevos estilos para los inputs editables */
+.price-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.price-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0 8px;
+  width: 45%;
+}
+
+.currency-symbol {
+  color: #888;
+  font-size: 0.9rem;
+  margin-right: 4px;
+  font-weight: 500;
+}
+
+.price-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  padding: 8px 0;
+  font-size: 0.95rem;
+  color: #333;
+  outline: none;
+  font-weight: 600;
+}
+
+/* Ocultar flechas del input number en Chrome/Safari */
+.price-input::-webkit-outer-spin-button,
+.price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+
+.separator {
+  color: #aaa;
+  font-weight: bold;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.filters-header h3 { margin: 0; color: #2c3e50; font-size: 1.1rem; }
+
+.reset-filters-btn {
+  background: #ffebee;
+  color: #e74c3c;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.reset-filters-btn:hover { background: #e74c3c; color: white; }
+
+.filter-section { margin-bottom: 1.2rem; border-bottom: 1px solid #f9f9f9; padding-bottom: 1rem; }
+.filter-section:last-child { border: none; }
+
+.filter-title {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background: none; border: none; padding: 0;
+  cursor: pointer; font-weight: 700; color: #2c3e50; font-size: 0.95rem; margin-bottom: 0.8rem;
+}
+
+/* Radio Buttons */
+.radio-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.radio-group label { font-size: 0.9rem; color: #555; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+.radio-group input { accent-color: #667eea; }
+
+/* --- SLIDER DE PRECIO DOBLE --- */
+.price-inputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.price-box {
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+  font-size: 0.9rem;
+}
+
+.range-slider-container {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  margin: 10px 0;
+  padding: 0 5px;
+  box-sizing: border-box;
+}
+
+/* Los inputs invisibles superpuestos */
+.price-range-thumb {
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  height: 20px;
+  -webkit-appearance: none;
+  pointer-events: none;
+  background: transparent;
+  width: 100%;
+  z-index: 3;
+  margin: 0;
+}
+
+/* Estilo de la "bolita" del slider */
+.price-range-thumb::-webkit-slider-thumb {
+  pointer-events: all;
+  position: relative;
+  z-index: 10;
+  -webkit-appearance: none;
+  height: 18px; 
+  width: 18px;
+  border-radius: 50%;
+  background: #667eea;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+
+/* Firefox Support */
+.price-range-thumb::-moz-range-thumb {
+  pointer-events: all;
+  position: relative;
+  z-index: 10;
+  height: 18px; 
+  width: 18px;
+  border-radius: 50%;
+  background: #667eea;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+
+/* Barra de fondo del slider de precio */
+.price-slider-track {
+  position: absolute;
+  top: 50%; 
+  transform: translateY(-50%);
+  width: calc(100% - 10px);
+  left: 5px;
+  height: 4px;
+  background: #ddd;
+  border-radius: 3px;
+  z-index: 1;
+}
+
+/* Barra de color entre los dos puntos */
+.price-slider-range {
+  position: absolute;
+  top: 0; 
+  bottom: 0;
+  background: #667eea;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+/* Marcas */
+.brands-list { 
+  max-height: 200px; 
+  overflow-y: auto; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.5rem; 
+}
+
+.checkbox-label { 
+  font-size: 0.9rem; 
+  color: #555; 
+  display: flex; 
+  align-items: center; 
+  gap: 0.5rem; 
+  cursor: pointer; 
+}
+
+.checkbox-label input { 
+  accent-color: #667eea; 
+  width: 16px; 
+  height: 16px; 
+}
+
