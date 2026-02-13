@@ -15,8 +15,12 @@ const ITEMS_PER_PAGE = 30;
 
 export function Categories() {
   const location = useLocation();
-  const navigate = useNavigate(); // ✅ Importante
-  const [searchParams, setSearchParams] = useSearchParams(); // ✅ Importante
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Capturamos el parámetro highlight de la URL
+  const highlightParam = searchParams.get('highlight');
+  
   const { user } = useAuth();
   const { addToCart } = useCart();
   
@@ -70,7 +74,7 @@ export function Categories() {
     loadAvailableBrands(newCategory);
   }, [location.search, user]); 
 
-  // Cargar productos usando los parámetros recibidos
+  // Carga inicial de productos
   const loadInitialProducts = async (params, currentFilters = activeFilters) => {
     console.log('📥 loadInitialProducts - Parámetros:', { params, currentFilters });
     setLoading(true);
@@ -81,21 +85,22 @@ export function Categories() {
     try {
       const { category, subcategory, brand } = params;
       
-      // Llamada API con los filtros de precio y orden
+      // Construimos los filtros incluyendo highlight (si existe en la URL actual)
+      const filtersToSend = {
+        ...currentFilters,
+        highlight: highlightParam
+      };
+
+      // Llamada API con los filtros completos
       const data = await api.getProducts(
         ITEMS_PER_PAGE, 
         category, 
         subcategory, 
         null, 
         brand,
-        currentFilters // Pasamos el objeto de filtros
+        filtersToSend
       );
       
-      console.log('📥 loadInitialProducts - Respuesta API:', {
-        productCount: data.length,
-        firstProduct: data[0]
-      });
-
       if (data.length < ITEMS_PER_PAGE) setHasMore(false);
 
       let favData = [];
@@ -119,11 +124,10 @@ export function Categories() {
     setLoading(false);
   };
 
-  // Cargar marcas filtradas por la categoría actual
+  // Cargar marcas disponibles
   const loadAvailableBrands = async (params) => {
     try {
       const { category, subcategory } = params;
-      // Esto pedirá al backend solo marcas de esa categoría
       const brands = await api.getBrands(category, subcategory);
       setAvailableBrands(brands || []);
     } catch (error) {
@@ -132,6 +136,7 @@ export function Categories() {
     }
   };
 
+  // ✅ CORRECCIÓN: AL CARGAR MÁS, QUITAMOS EL HIGHLIGHT
   const handleLoadMore = async () => {
     if (originalProducts.length === 0 || !hasMore) return;
     setLoadingMore(true);
@@ -139,13 +144,20 @@ export function Categories() {
     
     try {
       const { category, subcategory, brand } = selectedCategory;
+      
+      // Forzamos highlight: null para que la paginación sea natural
+      const filtersToSend = {
+        ...activeFilters,
+        highlight: null 
+      };
+
       const newData = await api.getProducts(
         ITEMS_PER_PAGE, 
         category, 
         subcategory, 
         lastProduct.id,
         brand,
-        activeFilters 
+        filtersToSend
       );
 
       if (newData.length < ITEMS_PER_PAGE) setHasMore(false);
@@ -164,19 +176,16 @@ export function Categories() {
     setLoadingMore(false);
   };
 
-  // ✅ CORRECCIÓN: Actualizar URL en lugar de solo estado local
   const handleSelectCategory = (categoryInfo) => {
     const params = new URLSearchParams();
-    // Ahora categoryInfo.parentCategory SÍ tendrá valor cuando clickees una categoría padre
     if (categoryInfo.parentCategory) params.set('category', categoryInfo.parentCategory);
-    
-    // Y categoryInfo.categoryName será null (o tendrá valor solo si es subcategoría)
     if (categoryInfo.categoryName) params.set('subcategory', categoryInfo.categoryName);
     
+    // Al cambiar categoría, se crea una URL nueva limpia (sin highlight)
     navigate(`/productos?${params.toString()}`);
   };
 
-  // ✅ CORRECCIÓN: Manejar cambio de marca actualizando la URL
+  // ✅ CORRECCIÓN: AL CAMBIAR MARCA, QUITAMOS EL HIGHLIGHT DE LA URL
   const handleBrandChange = (brand) => {
     const newParams = new URLSearchParams(searchParams);
     if (brand) {
@@ -184,16 +193,28 @@ export function Categories() {
     } else {
       newParams.delete('brand');
     }
+    
+    // Eliminamos el parámetro highlight para limpiar la URL
+    newParams.delete('highlight');
+    
     setSearchParams(newParams);
   };
 
+  // ✅ CORRECCIÓN: AL FILTRAR PRECIO/ORDEN, QUITAMOS EL HIGHLIGHT
   const handleServerFilterChange = (newFilters) => {
-    // Actualizamos estado y recargamos productos desde cero
-    console.log('📊 handleServerFilterChange - Filtros recibidos:', newFilters);
     const updatedFilters = { ...activeFilters, ...newFilters };
-    console.log('📊 handleServerFilterChange - Filtros finales:', updatedFilters);
     setActiveFilters(updatedFilters);
-    loadInitialProducts(selectedCategory, updatedFilters);
+    
+    // Si existe highlight, lo eliminamos de la URL y dejamos que el useEffect recargue
+    if (highlightParam) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('highlight');
+      setSearchParams(newParams);
+      // El useEffect detectará el cambio de URL y recargará los productos sin highlight
+    } else {
+      // Si no hay highlight que limpiar, recargamos manualmente
+      loadInitialProducts(selectedCategory, updatedFilters);
+    }
   };
 
   const handleAddToCart = (product) => {
@@ -201,21 +222,9 @@ export function Categories() {
     api.trackEvent('add_to_cart', product.id, product.category, user?.uid);
   };
 
-  const handleFilterChange = (filtered) => {
-    setDisplayedProducts(filtered);
-  };
-
   const handleOverlayClick = () => {
     setShowCategorySidebar(false);
     setShowFiltersSidebar(false);
-  };
-
-  const getPageTitle = () => {
-    const { category, subcategory, brand } = selectedCategory;
-    if (brand) return `${brand}${category ? ` en ${category}` : ''}`;
-    if (subcategory && category) return `${category} > ${subcategory}`;
-    if (category) return category;
-    return 'Catálogo Completo';
   };
 
   return (
@@ -227,9 +236,7 @@ export function Categories() {
 
         <main className="center-content">
           <div className="main-header">
-            {/* INICIO DE CAMBIO EN EL TÍTULO */}
             <h1>
-              {/* Parte 1: La ruta de Categoría > Subcategoría */}
               <span className="category-path">
                 {selectedCategory.category 
                   ? (selectedCategory.subcategory 
@@ -238,7 +245,6 @@ export function Categories() {
                   : 'Catálogo Completo'}
               </span>
 
-              {/* Parte 2: La Marca (si existe) en Naranja */}
               {selectedCategory.brand && (
                 <>
                   <span className="title-separator">•</span>
@@ -246,7 +252,6 @@ export function Categories() {
                 </>
               )}
             </h1>
-            {/* FIN DE CAMBIO EN EL TÍTULO */}
 
             <p className="results-count">
               Mostrando {displayedProducts.length} productos

@@ -38,41 +38,42 @@ export function Carousel({ images = [] }) {
   };
 
   const handlePromotionClick = (slide) => {
+    // Detectar tipo de acción. Si no tiene, asumir categoría por compatibilidad
     const actionType = slide.actionType || (slide.category ? 'category' : 'category');
-    const actionValue = slide.actionValue || slide.category;
+    
+    // Preparar variable para los IDs destacados (array de strings en Firestore)
+    let highlightParam = '';
+    if (slide.highlightedProducts && Array.isArray(slide.highlightedProducts) && slide.highlightedProducts.length > 0) {
+        highlightParam = `&highlight=${slide.highlightedProducts.join(',')}`;
+    }
 
-    if (!actionValue) return;
+    if (actionType === 'category') {
+      // Caso 1: Categoría simple
+      const categoryValue = slide.actionValue || slide.category;
+      navigate(`/productos?category=${categoryValue}${highlightParam}`);
 
-    switch (actionType) {
-      case 'category':
-        navigate(`/productos?category=${encodeURIComponent(actionValue)}`);
-        break;
-
-      // SOLUCIÓN AL ERROR: Añadimos llaves {} aquí para evitar error de sintaxis con 'const'
-      case 'subcategory': {
-        const parts = actionValue.split('|');
-        if (parts.length === 2) {
-          navigate(`/productos?category=${encodeURIComponent(parts[0])}&subcategory=${encodeURIComponent(parts[1])}`);
-        } else {
-          navigate(`/productos?category=${encodeURIComponent(actionValue)}`);
-        }
-        break;
+    } else if (actionType === 'subcategory') {
+      // Caso 2: Subcategoría (formato "Categoria|Subcategoria")
+      const val = slide.actionValue || '';
+      if (val.includes('|')) {
+        const [cat, sub] = val.split('|');
+        navigate(`/productos?category=${cat}&subcategory=${sub}${highlightParam}`);
+      } else {
+        // Fallback si está mal formateado
+        navigate(`/productos?category=${val}${highlightParam}`);
       }
 
-      case 'product':
-        navigate(`/producto/${actionValue}`);
-        break;
+    } else if (actionType === 'product') {
+      // Caso 3: Producto directo (no necesita highlight)
+      navigate(`/producto/${slide.actionValue}`);
 
-      case 'search':
-        navigate(`/buscar?q=${encodeURIComponent(actionValue)}`);
-        break;
+    } else if (actionType === 'search') {
+      // Caso 4: Búsqueda
+      navigate(`/buscar?q=${slide.actionValue}`); // Normalmente búsqueda no usa highlight, pero podrías agregarlo si quisieras
 
-      case 'url':
-        window.open(actionValue, '_blank');
-        break;
-
-      default:
-        console.warn('Tipo de acción desconocido:', actionType);
+    } else if (actionType === 'url') {
+      // Caso 5: URL Externa
+      window.open(slide.actionValue, '_blank');
     }
   };
 

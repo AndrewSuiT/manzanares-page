@@ -15,6 +15,7 @@ class API {
       if (filters.minPrice !== undefined && filters.minPrice !== null) params.append('min_price', filters.minPrice);
       if (filters.maxPrice !== undefined && filters.maxPrice !== null) params.append('max_price', filters.maxPrice);
       if (filters.sort) params.append('sort', filters.sort);
+      if (filters.highlight) params.append('highlight', filters.highlight);
 
       const url = `${API_URL}/api/products?${params}`;
       console.log('🌐 getProducts - URL:', url);
