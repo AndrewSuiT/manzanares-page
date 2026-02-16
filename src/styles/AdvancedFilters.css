@@ -96,11 +96,64 @@
   cursor: pointer; font-weight: 700; color: #2c3e50; font-size: 0.95rem; margin-bottom: 0.8rem;
 }
 
-/* Radio Buttons */
-.radio-group { display: flex; flex-direction: column; gap: 0.5rem; }
-.radio-group label { font-size: 0.9rem; color: #555; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
-.radio-group input { accent-color: #667eea; }
+.radio-group input[type="radio"] {
+  /* 1. Quitamos la apariencia nativa del navegador */
+  -webkit-appearance: none;
+  appearance: none;
+  
+  /* 2. Definimos la "caja" del círculo */
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ddd; /* Borde gris cuando no está marcado */
+  border-radius: 50%;
+  margin: 0;
+  display: grid;
+  place-content: center; /* Centra el punto interior */
+  cursor: pointer;
+  background-color: white;
+  transition: all 0.2s ease-in-out;
+}
 
+/* En AdvancedFilters.css */
+
+/* 1. Ocultamos el radio button nativo del sistema (el que falla) */
+.radio-group input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  
+  /* Creamos nuestro propio círculo */
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+/* 2. Cuando está marcado (checked), pintamos el borde de tu color */
+.radio-group input[type="radio"]:checked {
+  border-color: #667eea;
+}
+
+/* 3. Dibujamos el punto central */
+.radio-group input[type="radio"]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: scale(0); /* Oculto por defecto */
+  transition: 0.2s transform ease-in-out;
+  background-color: #667eea; /* TU COLOR */
+}
+
+/* 4. Hacemos aparecer el punto al marcarlo */
+.radio-group input[type="radio"]:checked::before {
+  transform: scale(1);
+}
 /* --- SLIDER DE PRECIO DOBLE --- */
 .price-inputs {
   display: flex;
@@ -213,5 +266,25 @@
   accent-color: #667eea; 
   width: 16px; 
   height: 16px; 
+}
+
+/* Estilos para las etiquetas del radio-group */
+.radio-group label {
+  font-size: 0.85rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+/* Marca el background cuando el radio está seleccionado */
+.radio-group label:has(input[type="radio"]:checked) {
+  background-color: #f0f2ff;
+  color: #667eea;
+  font-weight: 500;
 }
 

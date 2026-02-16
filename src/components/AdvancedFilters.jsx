@@ -8,7 +8,8 @@ export function AdvancedFilters({
   availableBrands = [], 
   selectedBrand,
   initialFilters = {}, 
-  categoryKey 
+  categoryKey,
+  instanceId = 'desktop'
 }) {
   // 1. AUMENTAMOS EL LÍMITE INICIAL (De 5000 a 15000 o lo que prefieras)
   const DEFAULT_MAX = 15000;
@@ -28,6 +29,21 @@ export function AdvancedFilters({
     price: true,
     brands: true 
   });
+
+  useEffect(() => {
+    if (initialFilters.sort) {
+      setSortOrder(initialFilters.sort);
+    }
+  }, [initialFilters.sort]);
+
+  // Modifica tu useEffect existente de categoryKey para que sea menos agresivo:
+  useEffect(() => {
+    // Solo resetea si realmente cambiamos de categoría
+    if (categoryKey) {
+      setPriceRange([initialFilters.minPrice || 0, initialFilters.maxPrice || sliderLimits[1]]);
+      setSortOrder(initialFilters.sort || 'relevance'); // Usa el filtro inicial si existe
+    }
+  }, [categoryKey]);
   
   // Calcular límites basados en productos cargados (solo si superan el default)
   useEffect(() => {
@@ -141,7 +157,7 @@ export function AdvancedFilters({
           <span className={`arrow ${expandedSections.sort ? 'expanded' : ''}`}>▼</span>
         </button>
         {expandedSections.sort && (
-          <div className="filter-content radio-group">
+          <div className="radio-group">
             {[
               { id: 'relevance', label: 'Relevancia' },
               { id: 'price-asc', label: 'Precio: Menor a Mayor' },
@@ -151,7 +167,8 @@ export function AdvancedFilters({
               <label key={option.id}>
                 <input 
                   type="radio" 
-                  name="sort" 
+                  // ✅ 2. Usamos el instanceId para crear un nombre único por grupo
+                  name={`sort-${instanceId}`} 
                   checked={sortOrder === option.id} 
                   onChange={() => handleSortChange(option.id)} 
                 /> 

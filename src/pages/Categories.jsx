@@ -294,7 +294,9 @@ export function Categories() {
         </main>
 
         <aside className="right-sidebar">
+          {/* 3. Instancia de ESCRITORIO */}
           <AdvancedFilters 
+            instanceId="desktop" 
             products={originalProducts} 
             onBrandChange={handleBrandChange}
             availableBrands={availableBrands} 
@@ -344,7 +346,9 @@ export function Categories() {
             </button>
           </div>
           <div className="mobile-sidebar-content">
+            {/* ✅ 4. Instancia de MÓVIL */}
             <AdvancedFilters 
+              instanceId="mobile" 
               products={originalProducts} 
               onBrandChange={handleBrandChange}
               availableBrands={availableBrands}

@@ -78,7 +78,7 @@ export function Terms() {
             <br />
             Email: info@manzanares.com
             <br />
-            Teléfono: +34 XXX XXX XXX
+            Teléfono: +51 957 833 503
           </p>
         </section>
 
