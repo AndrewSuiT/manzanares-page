@@ -176,11 +176,11 @@ export function ProductDetail() {
           {/* Precio y Cantidad */}
           <div className="detail-footer">
             <div className="price-section">
-              {Math.round(product.discount_percent) > 0 ? (
+              {product.discount_amount > 0 ? (
                 <div className="price-with-discount">
                   <span className="price-detail-discount">S/ {Math.round(product.price)}</span>
                   <span className="price-detail-original">S/ {Math.round(product.original_price)}</span>
-                  <span className="discount-label">-{Math.round(product.discount_percent)}% DESCUENTO</span>
+                  <span className="discount-label">OFERTA</span>
                 </div>
               ) : (
                 /* Precio normal */

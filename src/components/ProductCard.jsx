@@ -156,11 +156,11 @@ export function ProductCard({ product, onAddToCart }) {
           )}
 
           <div className="product-price">
-            {Math.round(product.discount_percent) > 0 ? (
+            {product.discount_amount > 0 ? (
               <>
                 <div className="price-row">
                   <span className="price-discount">S/ {Math.round(product.price)}</span>
-                  <span className="discount-badge">-{Math.round(product.discount_percent)}%</span>
+                  <span className="discount-badge">Oferta</span>
                 </div>
                 <span className="price-original">
                   S/ {product.original_price ? Math.round(product.original_price) : Math.round(product.price)}

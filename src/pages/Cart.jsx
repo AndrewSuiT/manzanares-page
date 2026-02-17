@@ -327,32 +327,34 @@ export function Cart() {
                 />
               </div>
               
-              <div className="form-group">
-                <label>DNI / Documento:</label>
-                <input 
-                  type="text" 
-                  name="dni"
-                  value={formData.dni} 
-                  onChange={handleInputChange} 
-                  required 
-                  placeholder="Ej: 12345678"
-                  pattern="[0-9]*"
-                />
-              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>DNI / Documento:</label>
+                  <input 
+                    type="text" 
+                    name="dni"
+                    value={formData.dni} 
+                    onChange={handleInputChange} 
+                    required 
+                    placeholder="Ej: 12345678"
+                    pattern="[0-9]*"
+                  />
+                </div>
 
-              <div className="form-group">
-                <label>Sucursal:</label>
-                <select 
-                  name="sucursal" 
-                  value={formData.sucursal} 
-                  onChange={handleInputChange} 
-                  required
-                >
-                  <option value="">Selecciona una sucursal</option>
-                  {sucursales.map(s => (
-                    <option key={s.id} value={s.id}>{s.nombre}</option>
-                  ))}
-                </select>
+                <div className="form-group">
+                  <label>Sucursal:</label>
+                  <select 
+                    name="sucursal" 
+                    value={formData.sucursal} 
+                    onChange={handleInputChange} 
+                    required
+                  >
+                    <option value="">Selecciona una sucursal</option>
+                    {sucursales.map(s => (
+                      <option key={s.id} value={s.id}>{s.nombre}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {sucursalSeleccionada && (
