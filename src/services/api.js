@@ -267,6 +267,48 @@ class API {
       throw error;
     }
   }
+
+  // --- MÉTODOS DE SUCURSALES ---
+  async getSucursales() {
+    try {
+      const response = await fetch(`${API_URL}/api/sucursales`);
+      if (!response.ok) throw new Error('Error fetching sucursales');
+      return await response.json();
+    } catch (error) {
+      console.error('Error en getSucursales:', error);
+      return [];
+    }
+  }
+
+  async getSucursalById(sucursalId) {
+    try {
+      const response = await fetch(`${API_URL}/api/sucursales/${sucursalId}`);
+      if (!response.ok) throw new Error('Error fetching sucursal');
+      return await response.json();
+    } catch (error) {
+      console.error('Error en getSucursalById:', error);
+      return null;
+    }
+  }
+
+  async calculateShipping(sucursalId, subtotal, deliveryType) {
+    try {
+      const response = await fetch(`${API_URL}/api/calculate-shipping`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sucursal_id: sucursalId,
+          subtotal: subtotal,
+          delivery_type: deliveryType
+        })
+      });
+      if (!response.ok) throw new Error('Error calculating shipping');
+      return await response.json();
+    } catch (error) {
+      console.error('Error en calculateShipping:', error);
+      return { shipping_cost: 0 };
+    }
+  }
 }
 
 export const api = new API();

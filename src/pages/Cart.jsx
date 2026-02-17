@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -16,14 +16,61 @@ export function Cart() {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     nombre: user ? user.displayName : '',
-    dni: ''
+    dni: '',
+    sucursal: '',
+    tipoEntrega: 'recojo', // 'recojo' o 'envio'
+    direccion: ''
   });
   const [orderData, setOrderData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  // Estados para sucursales y envío
+  const [sucursales, setSucursales] = useState([]);
+  const [sucursalSeleccionada, setSucursalSeleccionada] = useState(null);
+  const [shippingCost, setShippingCost] = useState(0);
 
-  const shippingCost = 0; // ENVÍO GRATIS
   const total = getTotalPrice();
   const finalTotal = total + shippingCost;
+
+  // Calcular descuentos totales
+  const totalDiscounts = cartItems.reduce((acc, item) => {
+    if (item.discount_percent > 0) {
+      const originalPrice = item.original_price || item.price;
+      return acc + (originalPrice - item.price) * item.quantity;
+    }
+    return acc;
+  }, 0);
+
+  useEffect(() => {
+    loadSucursales();
+  }, []);
+
+  useEffect(() => {
+    // Calcular costo de envío cuando cambian los parámetros
+    if (formData.sucursal && formData.tipoEntrega) {
+      calculateShipping();
+    }
+  }, [formData.sucursal, formData.tipoEntrega, total]);
+
+  const loadSucursales = async () => {
+    const data = await api.getSucursales();
+    setSucursales(data);
+  };
+
+  const calculateShipping = async () => {
+    if (formData.tipoEntrega === 'recojo' || !formData.sucursal) {
+      setShippingCost(0);
+      return;
+    }
+
+    try {
+      const result = await api.calculateShipping(formData.sucursal, total, formData.tipoEntrega);
+      setShippingCost(result.shipping_cost || 0);
+    } catch (error) {
+      console.error('Error calculando envío:', error);
+      setShippingCost(0);
+    }
+  };
 
   if (cartItems.length === 0 && !isConfirmationModalOpen) {
     return (
@@ -41,69 +88,100 @@ export function Cart() {
       </div>
     );
   }
+
   // Abrir modal y pre-cargar datos
   const handleOpenCheckout = async () => {
     setIsModalOpen(true);
     
     if (user) {
-        // Intentar obtener datos guardados del perfil
-        setIsProcessing(true); // Usamos este loading visualmente si quieres, o uno local
-        const profile = await api.getUserProfile(user.uid);
-        setIsProcessing(false);
+      setIsProcessing(true);
+      const profile = await api.getUserProfile(user.uid);
+      setIsProcessing(false);
 
-        setFormData(prev => ({
-            ...prev,
-            nombre: profile?.nombre || user.displayName || '',
-            dni: profile?.dni || ''
-        }));
+      setFormData(prev => ({
+        ...prev,
+        nombre: profile?.nombre || user.displayName || '',
+        dni: profile?.dni || '',
+        sucursal: profile?.sucursal || '',
+        direccion: profile?.direccion || ''
+      }));
+
+      // Si tiene sucursal guardada, cargar su configuración
+      if (profile?.sucursal) {
+        const sucursal = sucursales.find(s => s.id === profile.sucursal);
+        setSucursalSeleccionada(sucursal);
+      }
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Si cambia la sucursal, actualizar la sucursal seleccionada y resetear tipo de entrega
+    if (name === 'sucursal') {
+      const sucursal = sucursales.find(s => s.id === value);
+      setSucursalSeleccionada(sucursal);
+      
+      // Si la sucursal no permite envío, forzar recojo
+      if (sucursal && !sucursal.permite_envio) {
+        setFormData(prev => ({ ...prev, tipoEntrega: 'recojo' }));
+      }
+    }
   };
 
   const handleProcessOrder = async (e) => {
     e.preventDefault();
+
+    // Validaciones
+    if (!formData.sucursal) {
+      alert('Por favor selecciona una sucursal');
+      return;
+    }
+
+    if (formData.tipoEntrega === 'envio' && !formData.direccion) {
+      alert('Por favor ingresa una dirección para el envío');
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
-      // 1. Guardar cantidad de items ANTES de limpiar
       const itemCount = cartItems.length;
 
-      // 2. Preparar datos para el backend
       const orderPayload = {
         client_id: user ? user.uid : null,
         dni: formData.dni,
         nombre: formData.nombre,
+        sucursal: formData.sucursal,
+        tipo_entrega: formData.tipoEntrega,
+        direccion: formData.tipoEntrega === 'envio' ? formData.direccion : '',
+        costo_envio: shippingCost,
         total: finalTotal,
         items: cartItems.map(item => ({
-            cod_producto: item.id,
-            nombre: item.name,
-            cantidad: item.quantity,
-            precio: item.price
+          cod_producto: item.id,
+          nombre: item.name,
+          cantidad: item.quantity,
+          precio: item.price
         }))
       };
 
-      // 3. Enviar al Backend
       const response = await api.createOrder(orderPayload);
       const orderId = response.order_id;
 
-      // 4. Guardar datos del pedido en el estado ANTES de limpiar
       const newOrderData = {
         orderId,
         nombre: formData.nombre,
         dni: formData.dni,
+        sucursal: sucursalSeleccionada?.nombre || formData.sucursal,
+        tipoEntrega: formData.tipoEntrega === 'envio' ? 'Envío a Domicilio' : 'Recojo en Tienda',
+        direccion: formData.tipoEntrega === 'envio' ? formData.direccion : '',
         total: finalTotal,
         itemCount: itemCount
       };
       setOrderData(newOrderData);
       
-      // 5. Limpiar carrito
       clearCart();
-
-      // 6. Mostrar modal de confirmación
       setIsModalOpen(false);
       setIsConfirmationModalOpen(true);
       setIsProcessing(false);
@@ -205,13 +283,17 @@ export function Cart() {
               <span>Subtotal:</span>
               <span>S/ {Math.round(total)}</span>
             </div>
-            <div className="summary-item">
-              <span>Envío:</span>
-              <span style={{color: '#27ae60', fontWeight: 'bold'}}>GRATIS</span>
-            </div>
+            
+            {totalDiscounts > 0 && (
+              <div className="summary-item" style={{color: '#27ae60'}}>
+                <span>Descuentos Aplicados:</span>
+                <span>-S/ {Math.round(totalDiscounts)}</span>
+              </div>
+            )}
+            
             <div className="summary-item total">
               <span>Total:</span>
-              <span>S/ {Math.round(finalTotal)}</span>
+              <span>S/ {Math.round(total)}</span>
             </div>
             
             <button className="checkout-btn" onClick={handleOpenCheckout}>
@@ -228,7 +310,7 @@ export function Cart() {
       {/* MODAL DE CHECKOUT */}
       {isModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content checkout-modal">
             <h2>Finalizar Compra</h2>
             <p>Inicia sesión si quieres guardar tus pedidos.</p>
             
@@ -256,6 +338,91 @@ export function Cart() {
                   placeholder="Ej: 12345678"
                   pattern="[0-9]*"
                 />
+              </div>
+
+              <div className="form-group">
+                <label>Sucursal:</label>
+                <select 
+                  name="sucursal" 
+                  value={formData.sucursal} 
+                  onChange={handleInputChange} 
+                  required
+                >
+                  <option value="">Selecciona una sucursal</option>
+                  {sucursales.map(s => (
+                    <option key={s.id} value={s.id}>{s.nombre}</option>
+                  ))}
+                </select>
+              </div>
+
+              {sucursalSeleccionada && (
+                <div className="form-group">
+                  <label>Tipo de Entrega:</label>
+                  <div className="delivery-options">
+                    <label className="radio-option">
+                      <input 
+                        type="radio" 
+                        name="tipoEntrega" 
+                        value="recojo"
+                        checked={formData.tipoEntrega === 'recojo'}
+                        onChange={handleInputChange}
+                      />
+                      <span>Recojo en Tienda</span>
+                    </label>
+                    
+                    {sucursalSeleccionada.permite_envio && (
+                      <label className="radio-option">
+                        <input 
+                          type="radio" 
+                          name="tipoEntrega" 
+                          value="envio"
+                          checked={formData.tipoEntrega === 'envio'}
+                          onChange={handleInputChange}
+                        />
+                        <span>
+                          Envío a Domicilio
+                          {shippingCost === 0 && total >= (sucursalSeleccionada.costo_minimo_envio_gratis || 200) && (
+                            <span style={{color: '#27ae60', marginLeft: '0.5rem', fontWeight: 'bold'}}>GRATIS</span>
+                          )}
+                          {shippingCost > 0 && (
+                            <span style={{marginLeft: '0.5rem'}}>+ S/ {shippingCost}</span>
+                          )}
+                        </span>
+                      </label>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {formData.tipoEntrega === 'envio' && (
+                <div className="form-group">
+                  <label>Dirección de Envío:</label>
+                  <input 
+                    type="text" 
+                    name="direccion"
+                    value={formData.direccion} 
+                    onChange={handleInputChange} 
+                    required={formData.tipoEntrega === 'envio'}
+                    placeholder="Ej: Av. Principal 123, Villa El Salvador"
+                  />
+                </div>
+              )}
+
+              <div className="checkout-summary">
+                <div className="summary-row">
+                  <span>Subtotal:</span>
+                  <span>S/ {Math.round(total)}</span>
+                </div>
+                {shippingCost > 0 && (
+                  <div className="summary-row">
+                    <span>Envío:</span>
+                    <span>S/ {Math.round(shippingCost)}</span>
+                  </div>
+                )}
+                <div className="summary-row total-row">
+                  <span>Total Final:</span>
+                  <span>S/ {Math.round(finalTotal)}</span>
+                </div>
               </div>
 
               <div className="modal-actions">
@@ -292,6 +459,20 @@ export function Cart() {
                 <span className="label">DNI:</span>
                 <span className="value">{orderData.dni}</span>
               </div>
+              <div className="detail-item">
+                <span className="label">Sucursal:</span>
+                <span className="value">{orderData.sucursal}</span>
+              </div>
+              <div className="detail-item">
+                <span className="label">Tipo de Entrega:</span>
+                <span className="value">{orderData.tipoEntrega}</span>
+              </div>
+              {orderData.direccion && (
+                <div className="detail-item">
+                  <span className="label">Dirección:</span>
+                  <span className="value">{orderData.direccion}</span>
+                </div>
+              )}
               <div className="detail-item">
                 <span className="label">Cantidad de Productos:</span>
                 <span className="value">{orderData.itemCount}</span>

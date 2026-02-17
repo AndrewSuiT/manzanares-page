@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import '../styles/AdvancedFilters.css'; // Reusamos estilos de form por simplicidad
+import '../styles/Profile.css';
 
 export function Profile() {
   const { user } = useAuth();
@@ -9,14 +9,19 @@ export function Profile() {
     nombre: '',
     dni: '',
     telefono: '',
-    direccion: ''
+    direccion: '',
+    sucursal: ''
   });
+  const [sucursales, setSucursales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState({ type: '', text: '' });
 
   useEffect(() => {
-    if (user) loadData();
+    if (user) {
+      loadData();
+      loadSucursales();
+    }
   }, [user]);
 
   const loadData = async () => {
@@ -25,9 +30,15 @@ export function Profile() {
       nombre: data?.nombre || user.displayName || '',
       dni: data?.dni || '',
       telefono: data?.telefono || '',
-      direccion: data?.direccion || ''
+      direccion: data?.direccion || '',
+      sucursal: data?.sucursal || ''
     });
     setLoading(false);
+  };
+
+  const loadSucursales = async () => {
+    const data = await api.getSucursales();
+    setSucursales(data);
   };
 
   const handleChange = (e) => {
@@ -49,95 +60,89 @@ export function Profile() {
     setSaving(false);
   };
 
-  if (loading) return <div style={{padding: '4rem', textAlign:'center'}}>Cargando perfil...</div>;
+  if (loading) return <div className="profile-loading">Cargando perfil...</div>;
 
   return (
-    <div style={{ maxWidth: '600px', margin: '3rem auto', padding: '2rem', background: 'white', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
-      <h1 style={{ marginBottom: '1.5rem', color: '#2c3e50' }}>Mi Perfil</h1>
+    <div className="profile-container">
+      <h1 className="profile-title">Mi Perfil</h1>
       
       {user && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '1px solid #eee' }}>
-          <img src={user.photoURL} alt="" style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
+        <div className="profile-user-info">
+          <img src={user.photoURL} alt="" className="profile-avatar" />
           <div>
-            <h3 style={{ margin: 0 }}>{user.displayName}</h3>
-            <p style={{ margin: 0, color: '#7f8c8d' }}>{user.email}</p>
+            <h3 className="profile-user-name">{user.displayName}</h3>
+            <p className="profile-user-email">{user.email}</p>
           </div>
         </div>
       )}
 
       {msg.text && (
-        <div style={{ 
-          padding: '1rem', 
-          borderRadius: '6px', 
-          marginBottom: '1rem',
-          background: msg.type === 'success' ? '#d4edda' : '#f8d7da',
-          color: msg.type === 'success' ? '#155724' : '#721c24'
-        }}>
+        <div className={`profile-message ${msg.type}`}>
           {msg.text}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Nombre Completo para Pedidos</label>
+      <form onSubmit={handleSubmit} className="profile-form">
+        <div className="profile-form-group">
+          <label>Nombre Completo para Pedidos</label>
           <input 
             type="text" 
             name="nombre" 
             value={formData.nombre} 
             onChange={handleChange}
-            style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '6px' }}
           />
         </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>DNI / Documento</label>
+        <div className="profile-form-group">
+          <label>DNI / Documento</label>
           <input 
             type="text" 
             name="dni" 
             value={formData.dni} 
             onChange={handleChange}
             placeholder="Para autocompletar tus pedidos"
-            style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '6px' }}
           />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Teléfono</label>
-            <input 
-              type="tel" 
-              name="telefono" 
-              value={formData.telefono} 
-              onChange={handleChange}
-              style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '6px' }}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Dirección (Opcional)</label>
-            <input 
-              type="text" 
-              name="direccion" 
-              value={formData.direccion} 
-              onChange={handleChange}
-              style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '6px' }}
-            />
-          </div>
+        <div className="profile-form-group">
+          <label>Sucursal Preferida</label>
+          <select 
+            name="sucursal" 
+            value={formData.sucursal} 
+            onChange={handleChange}
+          >
+            <option value="">Selecciona una sucursal</option>
+            {sucursales.map(s => (
+              <option key={s.id} value={s.id}>{s.nombre}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="profile-form-group">
+          <label>Dirección (Opcional)</label>
+          <input 
+            type="text" 
+            name="direccion" 
+            value={formData.direccion} 
+            onChange={handleChange}
+            placeholder="Para autocompletar en envíos a domicilio"
+          />
+        </div>
+
+        <div className="profile-form-group">
+          <label>Teléfono</label>
+          <input 
+            type="tel" 
+            name="telefono" 
+            value={formData.telefono} 
+            onChange={handleChange}
+          />
         </div>
 
         <button 
           type="submit" 
           disabled={saving}
-          style={{ 
-            marginTop: '1rem', 
-            padding: '1rem', 
-            background: '#667eea', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '6px', 
-            fontWeight: 'bold', 
-            cursor: saving ? 'not-allowed' : 'pointer',
-            opacity: saving ? 0.7 : 1
-          }}
+          className="profile-submit-btn"
         >
           {saving ? 'Guardando...' : 'Guardar Cambios'}
         </button>
