@@ -2,6 +2,8 @@
 .home {
   width: 100%;
   overflow-x: hidden;
+  background: linear-gradient(135deg, #e0f6ff 0%, #d4f0ff 50%, #c8eaff 100%);
+  min-height: 100vh;
 }
 
 .home-content {
@@ -153,5 +155,85 @@
 
   .products-grid-home {
     gap: 0.4rem;
+  }
+}
+/* ============================================
+   SECTION TITLES ESTILIZADOS (Azul con íconos)
+   ============================================ */
+.section-title-styled {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0066cc;
+  font-weight: 800;
+}
+
+.section-title-styled.featured-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-title-styled.featured-title h2 {
+  margin: 0;
+  color: #0066cc;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.section-title-icon {
+  flex-shrink: 0;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Ícono estrella para Favoritos — dorado vivo */
+.star-icon {
+  color: #f5c518;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 5px rgba(245, 197, 24, 0.55));
+}
+
+/* Ícono ojo para Vistos Recientemente — azul medio */
+.eye-icon {
+  color: #0088ee;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 4px rgba(0, 136, 238, 0.4));
+}
+
+/* Ícono trofeo para Productos Destacados — azul dorado */
+.trophy-icon {
+  color: #0077dd;
+  font-size: 1.35rem;
+  filter: drop-shadow(0 0 5px rgba(0, 119, 221, 0.35));
+}
+
+/* Hover en header del slider */
+.slider-header:hover .star-icon {
+  transform: rotate(-10deg) scale(1.2);
+  filter: drop-shadow(0 0 8px rgba(245, 197, 24, 0.8));
+}
+
+.slider-header:hover .eye-icon {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 7px rgba(0, 136, 238, 0.65));
+}
+
+.section-header:hover .trophy-icon {
+  transform: translateY(-2px) scale(1.15);
+  filter: drop-shadow(0 0 7px rgba(0, 119, 221, 0.6));
+}
+
+@media (max-width: 768px) {
+  .section-title-styled.featured-title h2 {
+    font-size: 1.1rem;
+  }
+
+  .star-icon,
+  .eye-icon {
+    font-size: 1rem;
+  }
+
+  .trophy-icon {
+    font-size: 1.1rem;
   }
 }

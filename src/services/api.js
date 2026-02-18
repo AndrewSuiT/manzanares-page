@@ -29,6 +29,18 @@ class API {
     }
   }
 
+  // ✅ Obtener productos destacados en oferta para la home
+  async getFeaturedDeals() {
+    try {
+      const response = await fetch(`${API_URL}/api/featured-deals`);
+      if (!response.ok) throw new Error('Error fetching featured deals');
+      return await response.json();
+    } catch (error) {
+      console.error('Error en getFeaturedDeals:', error);
+      return { active: false, product_ids: [], products: [] };
+    }
+  }
+
   // ✅ NUEVO: Obtener todas las marcas disponibles (filtradas por categoría si se especifica)
   async getBrands(category = null, subcategory = null) {
     try {

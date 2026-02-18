@@ -1,12 +1,14 @@
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaStar, FaEye, FaTrophy } from 'react-icons/fa';
 import { Carousel } from '../components/Carousel';
 import { CategorySidebar } from '../components/CategorySidebar';
 import { ProductCard } from '../components/ProductCard';
 import { ProductSlider } from '../components/ProductSlider';
 import { SplashScreen } from '../components/SplashScreen';
 import { LoadingSpinner } from '../components/LoadingSpinner';
+import { FeaturedDeals } from '../components/FeaturedDeals';
 import { useCart } from '../context/CartContext';
 import { api } from '../services/api';
 import '../styles/Home.css';
@@ -19,6 +21,10 @@ export function Home() {
   // --- ESTADOS INDEPENDIENTES ---
   const [promotions, setPromotions] = useState([]);
   const [promosLoading, setPromosLoading] = useState(true);
+
+  // Featured Deals (Productos en Oferta)
+  const [featuredDeals, setFeaturedDeals] = useState(null);
+  const [dealsLoading, setDealsLoading] = useState(true);
 
   // Estados de carga separados para percepción de velocidad
   const [products, setProducts] = useState([]);
@@ -38,6 +44,7 @@ export function Home() {
   // Refs para evitar doble fetching en React StrictMode
   const promosLoaded = useRef(false);
   const productsLoaded = useRef(false);
+  const dealsLoaded = useRef(false);
 
 
   // 1. CARGA RÁPIDA: Promociones (Carousel)
@@ -56,6 +63,25 @@ export function Home() {
       }
     };
     loadPromos();
+  }, []);
+
+  // 1b. CARGA RÁPIDA: Productos en Oferta (Destacados desde Firebase)
+  useEffect(() => {
+    if (dealsLoaded.current) return;
+    dealsLoaded.current = true;
+
+    const loadDeals = async () => {
+      try {
+        const data = await api.getFeaturedDeals();
+        setFeaturedDeals(data);
+      } catch (error) {
+        console.error('Error loading featured deals:', error);
+        setFeaturedDeals({ active: false });
+      } finally {
+        setDealsLoading(false);
+      }
+    };
+    loadDeals();
   }, []);
 
   // 2. CARGA PESADA: Productos, Favoritos, Historial (PARALELO E INDEPENDIENTE)
@@ -144,10 +170,26 @@ export function Home() {
 
             <div className="products-section">
 
+              {/* --- PRODUCTOS EN OFERTA (Arriba de todo, para usuarios no logueados o antes de favoritos) --- */}
+              {/* Para usuarios NO logueados: aparece justo encima de Productos Destacados */}
+              {/* Para usuarios logueados: aparece antes de Favoritos */}
+              {!dealsLoading && (
+                <FeaturedDeals
+                  deals={featuredDeals}
+                  onAddToCart={handleAddToCart}
+                  userFavoriteIds={new Set(favorites.map(f => f.id))}
+                />
+              )}
+
               {/* --- FAVORITOS (Se muestran apenas carguen SU propia data) --- */}
               {!favsLoading && user && favorites.length > 0 && (
                 <ProductSlider
-                  title="Tus Favoritos ❤️"
+                  title={
+                    <span className="section-title-styled favorites-title">
+                      <FaStar className="section-title-icon star-icon" />
+                      Tus Favoritos
+                    </span>
+                  }
                   products={favorites}
                   viewAllLink="/favoritos"
                   onAddToCart={handleAddToCart}
@@ -157,7 +199,12 @@ export function Home() {
               {/* --- HISTORIAL (Se muestran apenas carguen SU propia data) --- */}
               {!historyLoading && user && history.length > 0 && (
                 <ProductSlider
-                  title="Vistos Recientemente 👀"
+                  title={
+                    <span className="section-title-styled history-title">
+                      <FaEye className="section-title-icon eye-icon" />
+                      Vistos Recientemente
+                    </span>
+                  }
                   products={history}
                   viewAllLink="/historial"
                   onAddToCart={handleAddToCart}
@@ -166,7 +213,10 @@ export function Home() {
 
               {/* --- PRODUCTOS DESTACADOS --- */}
               <div className="section-header">
-                <h2>Productos Destacados</h2>
+                <div className="section-title-styled featured-title">
+                  <FaTrophy className="section-title-icon trophy-icon" />
+                  <h2>Productos Destacados</h2>
+                </div>
                 <p className="section-subtitle">Explora nuestras recomendaciones para ti</p>
               </div>
 
