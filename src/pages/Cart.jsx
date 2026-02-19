@@ -196,7 +196,7 @@ export function Cart() {
   const handleOpenWhatsapp = () => {
     if (!orderData) return;
     const message = `Hola soy ${orderData.nombre} con DNI ${orderData.dni}, aqui esta el codigo de mi carritoweb: *${orderData.orderId}*, espero su mensaje.`;
-    const whatsappUrl = `https://wa.me/51957833501?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/51957833503?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -243,7 +243,7 @@ export function Cart() {
                       )}
                     </td>
                     <td className="quantity-cell">
-                      <div className="quantity-control">
+                      <div className="quantity-control-2">
                         <button className="qty-btn" onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}>−</button>
                         <input 
                           type="number" 

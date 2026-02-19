@@ -4,6 +4,7 @@ import { FaStar, FaRegStar } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
+import { useCartModal } from '../context/CartModalContext';
 import { api } from '../services/api';
 import { ProductSlider } from '../components/ProductSlider';
 import { LoadingSpinner } from '../components/LoadingSpinner';
@@ -13,6 +14,7 @@ export function ProductDetail() {
   const { id } = useParams();
   const { user } = useAuth();
   const { addToast } = useToast();
+  const { showCartModal } = useCartModal();
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,39 +22,29 @@ export function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [showImageModal, setShowImageModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showFullDesc, setShowFullDesc] = useState(false);
 
   useEffect(() => {
     loadProduct();
-    // Reiniciar cantidad al cambiar de producto
     setQuantity(1);
   }, [id, user]);
 
   const loadProduct = async () => {
     setLoading(true);
     try {
-      // CORRECCIÓN: Usar el nombre real de la función en api.js
       const data = await api.getProductById(id);
-
       if (!data) {
         setProduct(null);
         setLoading(false);
         return;
       }
-
-      // Cargar favoritos si hay usuario
       let favData = [];
-      if (user) {
-        favData = await api.getFavorites(user.uid);
-      }
+      if (user) favData = await api.getFavorites(user.uid);
       const favIds = new Set(favData.map(fav => fav.id));
       setIsFavorite(favIds.has(data.product.id));
-      
       setProduct(data.product);
       setSimilarProducts(data.similar_products || []);
-      
-      // Tracking de vista
       api.trackEvent('view', id, data.product?.category, user?.uid);
-
     } catch (error) {
       console.error('Error loading product:', error);
     }
@@ -62,33 +54,26 @@ export function ProductDetail() {
   const handleAddToCart = (itemOrEvent) => {
     let targetProduct = product;
     let targetQty = quantity;
-
-    // Si viene del Slider (es un objeto producto con ID)
     if (itemOrEvent && itemOrEvent.id) {
       targetProduct = itemOrEvent;
-      targetQty = 1; // En el slider siempre agregamos 1
+      targetQty = 1;
     }
-    
     if (targetProduct) {
       addToCart(targetProduct, targetQty);
-      addToast(`¡${targetProduct.name} agregado al carrito!`, 'success');
+      showCartModal(targetProduct);
       api.trackEvent('add_to_cart', targetProduct.id, targetProduct.category, user?.uid);
-      console.log(`Agregando ${targetQty} unidades de ${targetProduct.name}`);
     }
   };
 
   const handleToggleFavorite = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (!user) {
       addToast("Inicia sesión para guardar favoritos", "info");
       return;
     }
-
-    const previousState = isFavorite; 
-    setIsFavorite(!previousState); // 1. Cambio visual optimista (inmediato)
-
+    const previousState = isFavorite;
+    setIsFavorite(!previousState);
     try {
       if (previousState) {
         await api.removeFavorite(user.uid, product.id);
@@ -98,9 +83,8 @@ export function ProductDetail() {
         addToast("Agregado a Favoritos ⭐", "success");
       }
     } catch (error) {
-      // 2. SI FALLA: Revertimos el cambio visual
       console.error("Fallo al guardar favorito:", error);
-      setIsFavorite(previousState); // <--- ESTO ES CLAVE
+      setIsFavorite(previousState);
       addToast("No se pudo guardar: " + error.message, "error");
     }
   };
@@ -111,15 +95,15 @@ export function ProductDetail() {
   return (
     <div className="product-detail-page">
       <div className="detail-container">
-        {/* Imagen del producto */}
+
+        {/* ── Imagen ── */}
         <div className="detail-image">
-          <img 
-            src={product.image_url} 
+          <img
+            src={product.image_url}
             alt={product.name}
             onClick={() => setShowImageModal(true)}
-            style={{ cursor: 'pointer' }}
           />
-          {/* Botón favorito dentro de la imagen para posicionamiento en mobile */}
+          {/* Botón favorito flotante — solo visible en mobile (CSS lo muestra/oculta) */}
           <div className="product-title-with-favorite">
             <button
               type="button"
@@ -133,8 +117,14 @@ export function ProductDetail() {
           </div>
         </div>
 
-        {/* Información del producto */}
+        {/* ── Panel de información ──
+            En DESKTOP: orden natural (título → código → metadata → footer)
+            En MOBILE: CSS reordena con `order` para mostrar
+                       título → footer(precio+botón) → código → metadata
+            sin cambiar el HTML, solo con CSS flex order.             ── */}
         <div className="detail-info">
+
+          {/* Orden natural 1 / Mobile order 1: Título + favorito (desktop) */}
           <div className="product-title-with-favorite">
             <h1 title={product.name}>{product.name}</h1>
             <button
@@ -148,12 +138,12 @@ export function ProductDetail() {
             </button>
           </div>
 
-          {/* Descripción breve */}
+          {/* Orden natural 2 / Mobile order 3: Código */}
           <div className="description">
-            <p>{product.code}</p>
+            <p><span className="code-label">Código:</span> {product.code}</p>
           </div>
 
-          {/* Marca, Categoría y Subcategoría */}
+          {/* Orden natural 3 / Mobile order 4: Metadata (marca, categoría, subcategoría) */}
           <div className="product-metadata">
             {product.marca && product.marca !== 'Sin marca' && (
               <div className="metadata-item">
@@ -173,7 +163,8 @@ export function ProductDetail() {
             )}
           </div>
 
-          {/* Precio y Cantidad */}
+          {/* Orden natural 4 / Mobile order 2: Precio + cantidad + botón
+              En mobile sube al tope gracias a `order: 2` en CSS              */}
           <div className="detail-footer">
             <div className="price-section">
               {product.discount_amount > 0 ? (
@@ -183,43 +174,69 @@ export function ProductDetail() {
                   <span className="discount-label">OFERTA</span>
                 </div>
               ) : (
-                /* Precio normal */
                 <span className="price-detail">S/ {Math.round(product.price)}</span>
               )}
             </div>
 
             <div className="quantity-section">
               <label>Cantidad:</label>
-              <input
-                type="number"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-              />
+              <div className="quantity-control">
+                <button
+                  type="button"
+                  className="qty-btn"
+                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  aria-label="Disminuir cantidad"
+                >−</button>
+                <span className="qty-value">{quantity}</span>
+                <button
+                  type="button"
+                  className="qty-btn"
+                  onClick={() => setQuantity(q => q + 1)}
+                  aria-label="Aumentar cantidad"
+                >+</button>
+              </div>
             </div>
 
             <button
               className="add-to-cart"
-              onClick={handleAddToCart} 
+              onClick={handleAddToCart}
               disabled={product.stock === 0}
             >
               {product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
             </button>
           </div>
+
         </div>
       </div>
 
-      {/* Descripción detallada y Especificaciones en dos columnas */}
+      {/* ── Descripción + especificaciones ── */}
       <div className="product-details-section">
         <div className="details-column">
           {product.description && (
             <div className="detailed-description">
               <h2>Descripción Detallada</h2>
-              <p>{product.description}</p>
+              {/* Cada oración (separada por ". ") en su propia línea */}
+              <div className={`desc-text${showFullDesc ? ' desc-expanded' : ''}`}>
+                {product.description
+                  .split(/\.\s+/)
+                  .filter(s => s.trim().length > 0)
+                  .map((sentence, i, arr) => (
+                    <span key={i} className="desc-sentence">
+                      {sentence.endsWith('.') ? sentence : sentence + (i < arr.length - 1 ? '.' : '')}
+                    </span>
+                  ))
+                }
+              </div>
+              {/* Botón solo visible en mobile via CSS */}
+              <button
+                className="ver-mas-btn"
+                onClick={() => setShowFullDesc(v => !v)}
+              >
+                {showFullDesc ? 'Ver menos ▲' : 'Ver más ▼'}
+              </button>
             </div>
           )}
         </div>
-
         <div className="details-column">
           {product.specifications && Object.keys(product.specifications).length > 0 && (
             <div className="specifications">
@@ -236,16 +253,16 @@ export function ProductDetail() {
         </div>
       </div>
 
-      {/* Productos similares por subcategoría */}
+      {/* ── Productos similares ── */}
       {similarProducts && similarProducts.length > 0 && (
         <ProductSlider
           title={`Productos Similares en ${product.subcategory || product.category}`}
           products={similarProducts}
-          onAddToCart={handleAddToCart} 
+          onAddToCart={handleAddToCart}
         />
       )}
 
-      {/* Modal para ver imagen completa */}
+      {/* ── Modal imagen completa ── */}
       {showImageModal && (
         <div className="image-modal" onClick={() => setShowImageModal(false)}>
           <div className="modal-content">

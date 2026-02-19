@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaBolt, FaFire, FaStar, FaRegStar } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useCartModal } from '../context/CartModalContext';
 import { api } from '../services/api';
 import '../styles/FeaturedDeals.css';
 
 function DealCard({ product, onAddToCart, initialFavorite }) {
   const { user } = useAuth();
   const { addToast } = useToast();
+  const { showCartModal } = useCartModal();
   const [isFavorite, setIsFavorite] = useState(initialFavorite || product?.isFavorite || false);
 
   const hasDiscount = product.discount_percent > 0 || product.discount_amount > 0;
@@ -18,7 +20,7 @@ function DealCard({ product, onAddToCart, initialFavorite }) {
     e.stopPropagation();
     if (onAddToCart) {
       onAddToCart(product);
-      addToast(`¡${product.name} agregado al carrito!`, 'success');
+      showCartModal(product); // ← Mostrar modal
     }
   };
 

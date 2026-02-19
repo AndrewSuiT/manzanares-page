@@ -198,7 +198,7 @@
 }
 
 /* ✅ MEJORADO: Controles de cantidad más compactos */
-.quantity-control {
+.quantity-control-2 {
   display: flex;
   align-items: center;
   gap: 0.3rem; /* Más juntos */
