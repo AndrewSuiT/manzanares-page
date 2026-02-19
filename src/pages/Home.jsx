@@ -170,9 +170,6 @@ export function Home() {
 
             <div className="products-section">
 
-              {/* --- PRODUCTOS EN OFERTA (Arriba de todo, para usuarios no logueados o antes de favoritos) --- */}
-              {/* Para usuarios NO logueados: aparece justo encima de Productos Destacados */}
-              {/* Para usuarios logueados: aparece antes de Favoritos */}
               {!dealsLoading && (
                 <FeaturedDeals
                   deals={featuredDeals}
