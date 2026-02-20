@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -23,6 +23,7 @@ export function Header() {
   const [searchTerm, setSearchTerm] = useState('');
   
   const dropdownRef = useRef(null);
+  const location = useLocation(); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,6 +48,17 @@ export function Header() {
   const toggleMobileSearch = () => {
     setIsMobileSearchOpen(!isMobileSearchOpen);
     if (isMenuOpen) setIsMenuOpen(false);
+  };
+
+  const handleLogin = async () => {
+    const authResult = await loginWithGoogle();
+    
+    if (authResult?.isNewUser) {
+      // Si es nuevo, lo enviamos al perfil y guardamos la ruta actual (incluyendo parámetros de búsqueda)
+      navigate('/perfil', { 
+        state: { returnTo: location.pathname + location.search } 
+      });
+    }
   };
 
   return (
@@ -124,7 +136,7 @@ export function Header() {
               )}
             </div>
           ) : (
-            <button onClick={loginWithGoogle} className="login-btn">
+            <button onClick={handleLogin} className="login-btn">
               <FaUser /> Entrar
             </button>
           )}

@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import '../styles/Profile.css';
 
 export function Profile() {
   const { user } = useAuth();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const returnTo = location.state?.returnTo;
+
   const [formData, setFormData] = useState({
     nombre: '',
     dni: '',
@@ -54,6 +60,12 @@ export function Profile() {
     
     if (success) {
       setMsg({ type: 'success', text: '¡Datos actualizados correctamente!' });
+      
+      if (returnTo) {
+        setTimeout(() => {
+          navigate(returnTo);
+        }, 1500);
+      }
     } else {
       setMsg({ type: 'error', text: 'Error al guardar los datos.' });
     }
