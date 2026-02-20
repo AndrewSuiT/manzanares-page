@@ -17,6 +17,7 @@ export function Cart() {
   const [formData, setFormData] = useState({
     nombre: user ? user.displayName : '',
     dni: '',
+    telefono: '',
     sucursal: '',
     tipoEntrega: 'recojo', // 'recojo' o 'envio'
     direccion: ''
@@ -102,6 +103,7 @@ export function Cart() {
         ...prev,
         nombre: profile?.nombre || user.displayName || '',
         dni: profile?.dni || '',
+        telefono: profile?.telefono || '',
         sucursal: profile?.sucursal || '',
         direccion: profile?.direccion || ''
       }));
@@ -153,6 +155,7 @@ export function Cart() {
         client_id: user ? user.uid : null,
         dni: formData.dni,
         nombre: formData.nombre,
+        telefono: formData.telefono,
         sucursal: formData.sucursal,
         tipo_entrega: formData.tipoEntrega,
         direccion: formData.tipoEntrega === 'envio' ? formData.direccion : '',
@@ -342,19 +345,30 @@ export function Cart() {
                 </div>
 
                 <div className="form-group">
-                  <label>Sucursal:</label>
-                  <select 
-                    name="sucursal" 
-                    value={formData.sucursal} 
+                  <label>Teléfono:</label>
+                  <input 
+                    type="tel" 
+                    name="telefono"
+                    value={formData.telefono} 
                     onChange={handleInputChange} 
-                    required
-                  >
-                    <option value="">Selecciona una sucursal</option>
-                    {sucursales.map(s => (
-                      <option key={s.id} value={s.id}>{s.nombre}</option>
-                    ))}
-                  </select>
+                    placeholder="Ej: 987654321"
+                  />
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label>Sucursal:</label>
+                <select 
+                  name="sucursal" 
+                  value={formData.sucursal} 
+                  onChange={handleInputChange} 
+                  required
+                >
+                  <option value="">Selecciona una sucursal</option>
+                  {sucursales.map(s => (
+                    <option key={s.id} value={s.id}>{s.nombre}</option>
+                  ))}
+                </select>
               </div>
 
               {sucursalSeleccionada && (
@@ -428,13 +442,13 @@ export function Cart() {
               </div>
 
               <div className="modal-actions">
-                <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)}>
-                  Cancelar
-                </button>
                 <button type="submit" className="confirm-btn" disabled={isProcessing}>
                   {isProcessing ? 'Procesando...' : (
                     <> <FaWhatsapp /> Solicitar por WhatsApp </>
                   )}
+                </button>
+                <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)}>
+                  Cancelar
                 </button>
               </div>
             </form>
@@ -486,7 +500,7 @@ export function Cart() {
             </div>
 
             <div className="confirmation-message">
-              <p>💬 <strong>Puedes hablarnos al WhatsApp con tu número de pedido: {orderData.orderId}</strong></p>
+              <p>💬 <strong>Puedes hablarnos al 957 833 503 con tu N° de pedido: {orderData.orderId}</strong></p>
             </div>
 
             <div className="modal-actions">

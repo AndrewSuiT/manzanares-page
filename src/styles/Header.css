@@ -285,8 +285,8 @@
 
   /* ✅ BOTÓN LOGIN COMPACTO - Solo ícono con texto pequeño */
   .login-btn {
-    padding: 0.6rem 0.7rem;
-    font-size: 1.75rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem; /* ¡Aquí estaba el error de 1.75rem! */
     white-space: nowrap;
     display: flex;
     align-items: center;

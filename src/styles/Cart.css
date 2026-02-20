@@ -561,7 +561,7 @@
 
 .modal-content {
   background: white;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 12px;
   width: 90%;
   max-width: 500px;
@@ -709,37 +709,44 @@
 
 .modal-content h2 {
   margin-top: 0;
+  margin-bottom: 0.5rem;
   color: #2c3e50;
   border-bottom: none;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   font-weight: 600;
   color: #555;
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.55rem 0.75rem;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .form-group select {
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.55rem 0.75rem;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   background: white;
   cursor: pointer;
+}
+
+.checkout-modal > p {
+  margin: 0 0 0.6rem;
+  font-size: 0.9rem;
+  color: #777;
 }
 
 /* Fila de dos campos en el modal */
@@ -752,9 +759,9 @@
   min-width: 0;
 }
 
-/* DNI más angosto, Sucursal más ancha */
+/* DNI y Teléfono iguales */
 .form-row .form-group:first-child {
-  flex: 0 0 38%;
+  flex: 1;
 }
 
 .form-row .form-group:last-child {
@@ -777,7 +784,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.8rem;
+  padding: 0.5rem;
   border: 2px solid #e0e0e0;
   border-radius: 6px;
   cursor: pointer;
@@ -808,31 +815,31 @@
 /* Resumen de checkout */
 .checkout-summary {
   background: #f8f9fa;
-  padding: 1rem;
+  padding: 0.6rem 1rem;
   border-radius: 8px;
-  margin: 1.5rem 0;
+  margin: 0.6rem 0;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
+  padding: 0.25rem 0;
   color: #555;
 }
 
 .summary-row.total-row {
   border-top: 2px solid #ddd;
-  margin-top: 0.5rem;
-  padding-top: 0.8rem;
+  margin-top: 0.3rem;
+  padding-top: 0.5rem;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: #2c3e50;
 }
 
 .modal-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 /* Estilos base para ambos botones del modal */
