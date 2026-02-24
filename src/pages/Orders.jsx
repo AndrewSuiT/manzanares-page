@@ -1,13 +1,16 @@
+// src/pages/Orders.jsx
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaWhatsapp, FaTruck } from 'react-icons/fa'; // <-- Nuevos iconos
 import '../styles/Orders.css';
 
 export function Orders() {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // <-- Hook de navegación
 
   useEffect(() => {
     if (user) {
@@ -27,6 +30,23 @@ export function Orders() {
     setLoading(false);
   };
 
+  // Función para abrir WhatsApp
+  const handleOpenWhatsapp = (order) => {
+    const message = `Hola soy ${order.nombre} con DNI ${order.dni}, aqui esta el codigo de mi carritoweb: *${order.id}*, espero su mensaje.`;
+    const whatsappUrl = `https://wa.me/51957833503?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  // Función para ir a Seguir Envío
+  const handleTrackOrder = (order) => {
+    navigate('/seguir_envio', { 
+      state: { 
+        autoTrackOrderId: order.id, 
+        autoTrackDni: order.dni 
+      } 
+    });
+  };
+
   if (!user) {
     return (
       <div className="no-results" style={{margin: '4rem auto', textAlign: 'center'}}>
@@ -38,7 +58,6 @@ export function Orders() {
     );
   }
 
-  // Función auxiliar para formatear fecha
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -92,9 +111,20 @@ export function Orders() {
                     ))}
                   </div>
 
+                  {/* NUEVO FOOTER CON BOTONES */}
                   <div className="order-footer">
-                    <span className="total-label">Total Pagado:</span>
-                    <span className="total-amount">S/ {order.total?.toFixed(2)}</span>
+                    <div className="order-actions">
+                      <button className="btn-track" onClick={() => handleTrackOrder(order)}>
+                        <FaTruck /> Seguir Envío
+                      </button>
+                      <button className="btn-whatsapp" onClick={() => handleOpenWhatsapp(order)}>
+                        <FaWhatsapp /> Contactar
+                      </button>
+                    </div>
+                    <div className="order-total-block">
+                      <span className="total-label">Total Pagado:</span>
+                      <span className="total-amount">S/ {order.total?.toFixed(2)}</span>
+                    </div>
                   </div>
                 </div>
               </div>

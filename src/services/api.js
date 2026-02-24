@@ -180,6 +180,19 @@ class API {
     }
   }
 
+  async getOrderTracking(orderId, dni) {
+    try {
+      const params = new URLSearchParams({ order_id: orderId, dni });
+      const response = await fetch(`${API_URL}/api/orders/track?${params}`);
+      if (response.status === 404) return { error: 'not_found' };
+      if (!response.ok) throw new Error('Error fetching order tracking');
+      return await response.json();
+    } catch (error) {
+      console.error('Error en getOrderTracking:', error);
+      return { error: 'network_error' };
+    }
+  }
+
   async getUserOrders(clientId) {
     try {
       const response = await fetch(`${API_URL}/api/orders/user/${clientId}`);

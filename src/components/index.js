@@ -6,3 +6,4 @@ export { Carousel } from './Carousel';
 export { ProductCard } from './ProductCard';
 export { CategorySidebar } from './CategorySidebar';
 export { ProductSlider } from './ProductSlider';
+export { SeguimientoPedido } from './SeguimientoPedido';

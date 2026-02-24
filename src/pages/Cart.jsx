@@ -8,7 +8,7 @@ import '../styles/Cart.css';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart();
-  const { user } = useAuth();
+  const { user, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   
   // Estados para los Modales
@@ -16,6 +16,7 @@ export function Cart() {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     nombre: user ? user.displayName : '',
+    email: user ? user.email : '',
     dni: '',
     telefono: '',
     sucursal: '',
@@ -59,18 +60,24 @@ export function Cart() {
   };
 
   const calculateShipping = async () => {
-    if (formData.tipoEntrega === 'recojo' || !formData.sucursal) {
-      setShippingCost(0);
-      return;
-    }
+    // Envío gratis por ahora
+    setShippingCost(0);
+  };
 
-    try {
-      const result = await api.calculateShipping(formData.sucursal, total, formData.tipoEntrega);
-      setShippingCost(result.shipping_cost || 0);
-    } catch (error) {
-      console.error('Error calculando envío:', error);
-      setShippingCost(0);
-    }
+  // Helper: detectar si la sucursal seleccionada es "remota" (Pedregal, Ilo, La Joya)
+  const esSucursalRemota = () => {
+    if (!sucursalSeleccionada) return false;
+    const nombre = sucursalSeleccionada.nombre?.toLowerCase() || '';
+    return nombre.includes('pedregal') || nombre.includes('ilo') || nombre.includes('joya');
+  };
+
+  // Helper: tiempo estimado de entrega según sucursal y tipo de entrega
+  const tiempoEntrega = () => {
+    if (!sucursalSeleccionada) return null;
+    if (esSucursalRemota()) return '📦 Llega en menos de 10 días';
+    // Mollendo
+    if (formData.tipoEntrega === 'recojo') return '⚡ Entrega inmediata en tienda';
+    return '📦 Llega en menos de 4 días';
   };
 
   if (cartItems.length === 0 && !isConfirmationModalOpen) {
@@ -92,27 +99,60 @@ export function Cart() {
 
   // Abrir modal y pre-cargar datos
   const handleOpenCheckout = async () => {
-    setIsModalOpen(true);
-    
-    if (user) {
+    // Si no está logueado, iniciar sesión primero
+    if (!user) {
+      const result = await loginWithGoogle();
+      if (!result) return; // El usuario canceló el login
+
+      // Si es usuario nuevo, redirigir al perfil para completar sus datos
+      if (result.isNewUser) {
+        navigate('/perfil', { state: { returnTo: '/carrito' } });
+        return;
+      }
+
+      // Si ya tiene cuenta, cargar su perfil y abrir el checkout
       setIsProcessing(true);
-      const profile = await api.getUserProfile(user.uid);
+      const profile = await api.getUserProfile(result.user.uid);
       setIsProcessing(false);
 
       setFormData(prev => ({
         ...prev,
-        nombre: profile?.nombre || user.displayName || '',
+        nombre: profile?.nombre || result.user.displayName || '',
+        email: result.user.email,
         dni: profile?.dni || '',
         telefono: profile?.telefono || '',
         sucursal: profile?.sucursal || '',
         direccion: profile?.direccion || ''
       }));
 
-      // Si tiene sucursal guardada, cargar su configuración
       if (profile?.sucursal) {
         const sucursal = sucursales.find(s => s.id === profile.sucursal);
         setSucursalSeleccionada(sucursal);
       }
+
+      setIsModalOpen(true);
+      return;
+    }
+
+    // Usuario ya logueado: cargar perfil y abrir checkout
+    setIsModalOpen(true);
+    setIsProcessing(true);
+    const profile = await api.getUserProfile(user.uid);
+    setIsProcessing(false);
+
+    setFormData(prev => ({
+      ...prev,
+      nombre: profile?.nombre || user.displayName || '',
+      email: user.email,
+      dni: profile?.dni || '',
+      telefono: profile?.telefono || '',
+      sucursal: profile?.sucursal || '',
+      direccion: profile?.direccion || ''
+    }));
+
+    if (profile?.sucursal) {
+      const sucursal = sucursales.find(s => s.id === profile.sucursal);
+      setSucursalSeleccionada(sucursal);
     }
   };
 
@@ -156,6 +196,7 @@ export function Cart() {
         dni: formData.dni,
         nombre: formData.nombre,
         telefono: formData.telefono,
+        email: formData.email,         // <--- ¡ESTO ES LO QUE FALTA!
         sucursal: formData.sucursal,
         tipo_entrega: formData.tipoEntrega,
         direccion: formData.tipoEntrega === 'envio' ? formData.direccion : '',
@@ -177,7 +218,7 @@ export function Cart() {
         nombre: formData.nombre,
         dni: formData.dni,
         sucursal: sucursalSeleccionada?.nombre || formData.sucursal,
-        tipoEntrega: formData.tipoEntrega === 'envio' ? 'Envío a Domicilio' : 'Recojo en Tienda',
+        tipoEntrega: formData.tipoEntrega === 'envio' ? 'Envío a Domicilio solo a la Prov de Islay' : 'Recojo en Tienda',
         direccion: formData.tipoEntrega === 'envio' ? formData.direccion : '',
         total: finalTotal,
         itemCount: itemCount
@@ -315,7 +356,6 @@ export function Cart() {
         <div className="modal-overlay">
           <div className="modal-content checkout-modal">
             <h2>Finalizar Compra</h2>
-            <p>Inicia sesión si quieres guardar tus pedidos.</p>
             
             <form onSubmit={handleProcessOrder}>
               <div className="form-group">
@@ -326,7 +366,7 @@ export function Cart() {
                   value={formData.nombre} 
                   onChange={handleInputChange} 
                   required 
-                  placeholder="Ej: Juan Pérez"
+                  placeholder="Ej: Juan Perez"
                 />
               </div>
               
@@ -351,31 +391,46 @@ export function Cart() {
                     name="telefono"
                     value={formData.telefono} 
                     onChange={handleInputChange} 
+                    required
                     placeholder="Ej: 987654321"
                   />
                 </div>
               </div>
 
-              <div className="form-group">
-                <label>Sucursal:</label>
-                <select 
-                  name="sucursal" 
-                  value={formData.sucursal} 
-                  onChange={handleInputChange} 
-                  required
-                >
-                  <option value="">Selecciona una sucursal</option>
-                  {sucursales.map(s => (
-                    <option key={s.id} value={s.id}>{s.nombre}</option>
-                  ))}
-                </select>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Sucursal:</label>
+                  <select 
+                    name="sucursal" 
+                    value={formData.sucursal} 
+                    onChange={handleInputChange} 
+                    required
+                  >
+                    <option value="">Selecciona una sucursal</option>
+                    {sucursales.map(s => (
+                      <option key={s.id} value={s.id}>{s.nombre}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Correo Electrónico:</label>
+                  <input 
+                    type="email" 
+                    name="email"
+                    value={formData.email} 
+                    onChange={handleInputChange} 
+                    required // <-- Obligatorio
+                    placeholder="Ej: correo@ejemplo.com"
+                  />
+                </div>
               </div>
 
               {sucursalSeleccionada && (
                 <div className="form-group">
                   <label>Tipo de Entrega:</label>
-                  <div className="delivery-options">
-                    <label className="radio-option">
+                  <div className="cart-checkout__delivery-options">
+                    <label className="cart-checkout__radio-option">
                       <input 
                         type="radio" 
                         name="tipoEntrega" 
@@ -383,11 +438,18 @@ export function Cart() {
                         checked={formData.tipoEntrega === 'recojo'}
                         onChange={handleInputChange}
                       />
-                      <span>Recojo en Tienda</span>
+                      <span className="cart-checkout__radio-label-content">
+                        <span>Recojo en Tienda</span>
+                        {esSucursalRemota() && (
+                          <span className="cart-checkout__delivery-badge">
+                            Envío se coordina al llegar a sucursal
+                          </span>
+                        )}
+                      </span>
                     </label>
                     
-                    {sucursalSeleccionada.permite_envio && (
-                      <label className="radio-option">
+                    {sucursalSeleccionada.permite_envio && !esSucursalRemota() && (
+                      <label className="cart-checkout__radio-option">
                         <input 
                           type="radio" 
                           name="tipoEntrega" 
@@ -396,13 +458,7 @@ export function Cart() {
                           onChange={handleInputChange}
                         />
                         <span>
-                          Envío a Domicilio
-                          {shippingCost === 0 && total >= (sucursalSeleccionada.costo_minimo_envio_gratis || 200) && (
-                            <span style={{color: '#27ae60', marginLeft: '0.5rem', fontWeight: 'bold'}}>GRATIS</span>
-                          )}
-                          {shippingCost > 0 && (
-                            <span style={{marginLeft: '0.5rem'}}>+ S/ {shippingCost}</span>
-                          )}
+                          Envío a Domicilio solo a la Prov. de Islay
                         </span>
                       </label>
                     )}
@@ -425,14 +481,10 @@ export function Cart() {
               )}
 
               <div className="checkout-summary">
-                <div className="summary-row">
-                  <span>Subtotal:</span>
-                  <span>S/ {Math.round(total)}</span>
-                </div>
-                {shippingCost > 0 && (
-                  <div className="summary-row">
-                    <span>Envío:</span>
-                    <span>S/ {Math.round(shippingCost)}</span>
+                {tiempoEntrega() && (
+                  <div className="summary-row" style={{color: '#2980b9', fontWeight: '600'}}>
+                    <span>Tiempo de entrega:</span>
+                    <span>{tiempoEntrega()}</span>
                   </div>
                 )}
                 <div className="summary-row total-row">

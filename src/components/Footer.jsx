@@ -1,3 +1,4 @@
+// src/components/Footer.jsx
 import { Link } from 'react-router-dom';
 import { FaFacebook, FaInstagram, FaWhatsapp, FaMapMarkerAlt, FaPhone, FaEnvelope, FaTiktok } from 'react-icons/fa';
 import '../styles/Footer.css';
@@ -9,7 +10,6 @@ export function Footer() {
         {/* Logo y redes sociales */}
         <div className="footer-section">
           <Link to="/" className="logo">
-          {/* Reemplaza '/logo.png' con la ruta real de tu imagen */}
             <img 
               src="/logo2.png" 
               alt="Manzanares Logo" 
@@ -55,6 +55,7 @@ export function Footer() {
             <Link to="/ubicanos">Ubicanos</Link>
             <Link to="/terminos">Términos y Condiciones</Link>
             <Link to="/productos">Categorías</Link>
+            <Link to="/seguir_envio">Seguir Envío</Link> {/* NUEVO ENLACE */}
             <Link to="/">Inicio</Link>
           </nav>
         </div>

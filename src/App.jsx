@@ -1,20 +1,11 @@
+// src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { CartModalProvider } from './context/CartModalContext';
 import { CartAddedModal } from './components/CartAddedModal';
 import { Layout } from './components/Layout';
 import { ScrollToTop } from './components/ScrollToTop';
-import { Home } from './pages/Home';
-import { Categories } from './pages/Categories';
-import { Search } from './pages/Search';
-import { ProductDetail } from './pages/ProductDetail';
-import { About } from './pages/About';
-import { Terms } from './pages/Terms';
-import { Cart } from './pages/Cart';
-import { Profile } from './pages/Profile';
-import { Favorites } from './pages/Favorites'; 
-import { History } from './pages/History';
-import { Orders } from './pages/Orders';
+import { Home, Categories, Search, ProductDetail, About, Terms, Cart, Profile, Favorites, History, Orders, SeguimientoPedido } from './pages'; 
 import './App.css';
 
 function App() {
@@ -37,6 +28,7 @@ function App() {
               <Route path="/pedidos" element={<Orders />} />
               <Route path="/favoritos" element={<Favorites />} />
               <Route path="/historial" element={<History />} />
+              <Route path="/seguir_envio" element={<SeguimientoPedido />} /> 
             </Route>
           </Routes>
         </CartModalProvider>
