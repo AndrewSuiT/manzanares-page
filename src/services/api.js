@@ -334,6 +334,44 @@ class API {
       return { shipping_cost: 0 };
     }
   }
+  // --- MÉTODOS DE CARRITO PERSISTENTE ---
+
+  async getCart(userId) {
+    try {
+      const response = await fetch(`${API_URL}/api/cart/${userId}`);
+      if (!response.ok) throw new Error('Error fetching cart');
+      return await response.json();
+    } catch (error) {
+      console.error('Error en getCart:', error);
+      return [];
+    }
+  }
+
+  async saveCart(userId, items) {
+    try {
+      const response = await fetch(`${API_URL}/api/cart/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items })
+      });
+      if (!response.ok) throw new Error('Error saving cart');
+      return await response.json();
+    } catch (error) {
+      console.error('Error en saveCart:', error);
+    }
+  }
+
+  async clearRemoteCart(userId) {
+    try {
+      const response = await fetch(`${API_URL}/api/cart/${userId}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) throw new Error('Error clearing cart');
+      return await response.json();
+    } catch (error) {
+      console.error('Error en clearRemoteCart:', error);
+    }
+  }
 }
 
 export const api = new API();

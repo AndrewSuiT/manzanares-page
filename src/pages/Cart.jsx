@@ -552,7 +552,7 @@ export function Cart() {
             </div>
 
             <div className="confirmation-message">
-              <p>💬 <strong>Puedes hablarnos al 957 833 503 con tu N° de pedido: {orderData.orderId}</strong></p>
+              <p>💬 <strong>Para pagar puede comunicarse con nosotros con el boton de "Contactar por WhatsApp"</strong></p>
             </div>
 
             <div className="modal-actions">

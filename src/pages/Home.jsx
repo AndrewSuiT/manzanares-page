@@ -60,6 +60,13 @@ export function Home() {
         console.error('Error loading promotions:', error);
       } finally {
         setPromosLoading(false);
+        // El carousel es lo primero visible: ocultar splash aqui
+        if (sessionStorage.getItem('app_first_load_completed') !== 'true') {
+          setTimeout(() => {
+            setIsFirstLoad(false);
+            sessionStorage.setItem('app_first_load_completed', 'true');
+          }, 500);
+        }
       }
     };
     loadPromos();
@@ -123,14 +130,6 @@ export function Home() {
         console.error('Error loading recommendations:', error);
       } finally {
         setRecsLoading(false); // Solo apaga el spinner de la grilla principal
-
-        // Manejo del Splash Screen (Se quita cuando carga lo principal)
-        if (isFirstLoad) {
-          setTimeout(() => {
-            setIsFirstLoad(false);
-            sessionStorage.setItem('app_first_load_completed', 'true');
-          }, 1000);
-        }
       }
     };
 
