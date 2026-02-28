@@ -797,3 +797,88 @@
     padding: 0.78rem;
   }
 }
+/* ============================================
+   LÍMITE DE CANTIDAD - TOOLTIP INFO
+   ============================================ */
+.qty-info-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+
+.qty-info-btn {
+  background: none;
+  border: 1.5px solid #667eea;
+  color: #667eea;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.qty-info-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.qty-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  background: #2d3748;
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  padding: 0.6rem 2rem 0.6rem 0.75rem;
+  border-radius: 8px;
+  width: 260px;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  animation: fadeInTooltip 0.18s ease;
+}
+
+.qty-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 14px;
+  border: 6px solid transparent;
+  border-top-color: #2d3748;
+}
+
+.qty-tooltip-close {
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.qty-tooltip-close:hover { color: #fff; }
+
+@keyframes fadeInTooltip {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .qty-tooltip {
+    width: 220px;
+    font-size: 0.75rem;
+  }
+}

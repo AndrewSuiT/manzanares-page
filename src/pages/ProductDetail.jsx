@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -23,6 +23,21 @@ export function ProductDetail() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
+  const [showQtyTooltip, setShowQtyTooltip] = useState(false);
+  const MAX_QTY = 2;
+  const qtyTooltipRef = useRef(null);
+
+  // Cerrar tooltip al hacer click en cualquier lado
+  useEffect(() => {
+    if (!showQtyTooltip) return;
+    const handler = (e) => {
+      if (qtyTooltipRef.current && !qtyTooltipRef.current.contains(e.target)) {
+        setShowQtyTooltip(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showQtyTooltip]);
 
   useEffect(() => {
     loadProduct();
@@ -191,9 +206,30 @@ export function ProductDetail() {
                 <button
                   type="button"
                   className="qty-btn"
-                  onClick={() => setQuantity(q => q + 1)}
+                  onClick={() => {
+                    if (quantity >= MAX_QTY) {
+                      setShowQtyTooltip(true);
+                      setTimeout(() => setShowQtyTooltip(false), 4000);
+                    } else {
+                      setQuantity(q => q + 1);
+                    }
+                  }}
                   aria-label="Aumentar cantidad"
                 >+</button>
+              </div>
+              <div className="qty-info-wrapper" ref={qtyTooltipRef}>
+                <button
+                  type="button"
+                  className="qty-info-btn"
+                  onClick={() => setShowQtyTooltip(v => !v)}
+                  title="Información sobre el límite de cantidad"
+                >ℹ</button>
+                {showQtyTooltip && (
+                  <div className="qty-tooltip">
+                    Si desea más de 2 productos, genere su pedido y al contactar con nosotros mencionelo y editamos su pedido.
+                    <button className="qty-tooltip-close" onClick={() => setShowQtyTooltip(false)}>×</button>
+                  </div>
+                )}
               </div>
             </div>
 

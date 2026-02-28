@@ -1120,3 +1120,121 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* ============================================
+   LÍMITE DE CANTIDAD - TOOLTIP INFO (CARRITO)
+   ============================================ */
+
+/* Contenedor fila: [−][n][+] [ℹ] en desktop */
+.quantity-cell-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.qty-info-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.qty-info-btn {
+  background: none;
+  border: 1.5px solid #667eea;
+  color: #667eea;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.65rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.qty-info-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.qty-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2d3748;
+  color: #fff;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  padding: 0.6rem 2rem 0.6rem 0.75rem;
+  border-radius: 8px;
+  width: 240px;
+  z-index: 200;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  animation: fadeInTooltip 0.18s ease;
+  white-space: normal;
+  text-align: left;
+}
+
+.qty-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #2d3748;
+}
+
+.qty-tooltip-close {
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.qty-tooltip-close:hover { color: #fff; }
+
+@keyframes fadeInTooltip {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@media (max-width: 768px) {
+  /* En mobile: la celda ya es flex-row, el ℹ queda a la derecha con separación */
+  .quantity-cell-inner {
+    gap: 0;
+  }
+
+  .qty-info-wrapper {
+    margin-left: 8px; /* Separación visible del botón + */
+  }
+
+  .qty-tooltip {
+    width: 200px;
+    font-size: 0.72rem;
+    left: 0;
+    transform: none;
+  }
+  .qty-tooltip::after {
+    left: 12px;
+    transform: none;
+  }
+  @keyframes fadeInTooltip {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}

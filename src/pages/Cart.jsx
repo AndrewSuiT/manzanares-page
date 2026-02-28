@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -30,6 +30,21 @@ export function Cart() {
   const [sucursales, setSucursales] = useState([]);
   const [sucursalSeleccionada, setSucursalSeleccionada] = useState(null);
   const [shippingCost, setShippingCost] = useState(0);
+  const [qtyTooltipId, setQtyTooltipId] = useState(null); // ID del item con tooltip visible
+  const MAX_QUANTITY = 2;
+  const qtyTooltipRef = useRef(null);
+
+  // Cerrar tooltip al hacer click en cualquier lado
+  useEffect(() => {
+    if (!qtyTooltipId) return;
+    const handler = (e) => {
+      if (qtyTooltipRef.current && !qtyTooltipRef.current.contains(e.target)) {
+        setQtyTooltipId(null);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [qtyTooltipId]);
 
   const total = getTotalPrice();
   const finalTotal = total + shippingCost;
@@ -287,19 +302,48 @@ export function Cart() {
                       )}
                     </td>
                     <td className="quantity-cell">
-                      <div className="quantity-control-2">
-                        <button className="qty-btn" onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}>−</button>
-                        <input 
-                          type="number" 
-                          min="1" 
-                          value={item.quantity} 
-                          onChange={(e) => {
-                            const newQty = Math.max(1, parseInt(e.target.value) || 1);
-                            updateQuantity(item.id, newQty);
-                          }}
-                          className="qty-input" 
-                        />
-                        <button className="qty-btn" onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                      <div className="quantity-cell-inner">
+                        <div className="quantity-control-2">
+                          <button className="qty-btn" onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}>−</button>
+                          <input 
+                            type="number" 
+                            min="1"
+                            max={MAX_QUANTITY}
+                            value={item.quantity} 
+                            onChange={(e) => {
+                              const newQty = Math.min(MAX_QUANTITY, Math.max(1, parseInt(e.target.value) || 1));
+                              updateQuantity(item.id, newQty);
+                            }}
+                            className="qty-input" 
+                          />
+                          <button
+                            className="qty-btn"
+                            onClick={() => {
+                              if (item.quantity >= MAX_QUANTITY) {
+                                setQtyTooltipId(qtyTooltipId === item.id ? null : item.id);
+                              } else {
+                                updateQuantity(item.id, item.quantity + 1);
+                              }
+                            }}
+                          >+</button>
+                        </div>
+                        <div
+                          className="qty-info-wrapper"
+                          ref={qtyTooltipId === item.id ? qtyTooltipRef : null}
+                        >
+                          <button
+                            type="button"
+                            className="qty-info-btn"
+                            onClick={() => setQtyTooltipId(qtyTooltipId === item.id ? null : item.id)}
+                            title="Información sobre el límite de cantidad"
+                          >ℹ</button>
+                          {qtyTooltipId === item.id && (
+                            <div className="qty-tooltip">
+                              Si desea más de 2 productos, genere su pedido y al contactar con nosotros mencionelo y editamos su pedido.
+                              <button className="qty-tooltip-close" onClick={() => setQtyTooltipId(null)}>×</button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="subtotal-cell">
