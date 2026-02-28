@@ -475,7 +475,7 @@ export function Cart() {
                     value={formData.direccion} 
                     onChange={handleInputChange} 
                     required={formData.tipoEntrega === 'envio'}
-                    placeholder="Ej: Av. Principal 123, Villa El Salvador"
+                    placeholder="Ej: Av. Principal 123, Inclan"
                   />
                 </div>
               )}
@@ -552,7 +552,7 @@ export function Cart() {
             </div>
 
             <div className="confirmation-message">
-              <p>💬 <strong>Para pagar puede comunicarse con nosotros con el boton de "Contactar por WhatsApp"</strong></p>
+              <p>💬 <strong>Para pagar puede comunicarse con nosotros con el botón de "Contactar por WhatsApp"</strong></p>
             </div>
 
             <div className="modal-actions">
