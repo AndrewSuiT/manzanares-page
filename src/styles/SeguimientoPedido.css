@@ -265,7 +265,8 @@
   .sp-hero-icon  { font-size: 38px; }
 
   /* Formulario en columna */
-  .sp-form        { flex-direction:column; padding:18px; gap:10px; flex-wrap:wrap; }
+  .sp-form        { flex-direction:column; padding:18px; gap:10px; flex-wrap:nowrap; }
+  .sp-field       { width:100%; }
   .sp-field-btn   { width:100%; }
   .sp-invisible-label { display:none; }
   .sp-btn         { width:100%; }

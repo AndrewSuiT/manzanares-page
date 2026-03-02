@@ -75,7 +75,7 @@ export function Header() {
           <Link to="/" onClick={() => setIsMenuOpen(false)}>Inicio</Link>
           <Link to="/productos" onClick={() => setIsMenuOpen(false)}>Catálogo</Link>
           <Link to="/ubicanos" onClick={() => setIsMenuOpen(false)}>Ubícanos</Link>
-          <Link to="/terminos" onClick={() => setIsMenuOpen(false)}>Términos</Link> 
+          <Link to="/seguir_envio" onClick={() => setIsMenuOpen(false)}>Seguir Envío</Link> 
         </nav>
 
         {/* --- BUSCADOR ESCRITORIO --- */}

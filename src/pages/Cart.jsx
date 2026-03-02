@@ -416,7 +416,7 @@ export function Cart() {
               
               <div className="form-row">
                 <div className="form-group">
-                  <label>DNI / Documento:</label>
+                  <label>DNI / RUC:</label>
                   <input 
                     type="text" 
                     name="dni"
