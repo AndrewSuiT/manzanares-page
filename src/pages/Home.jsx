@@ -161,6 +161,9 @@ export function Home() {
       <SplashScreen isVisible={isFirstLoad} />
 
       <div className="home">
+        
+        <h1 className="sr-only">Catálogo de Productos Manzanares S.A.C. - Compra sin salir de Casa</h1>
+
         <Carousel images={promotions} />
 
         <section className="home-content">
