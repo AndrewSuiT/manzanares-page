@@ -29,7 +29,7 @@ export function About() {
               <h3>Contacto</h3>
               <p>Teléfono: +51957833503</p>
               <p>Email: manzanaresenlinea@gmail.com</p>
-              <p>WhatsApp: +51922027675</p>
+              <p>WhatsApp: +51957833503</p>
             </div>
           </div>
 

@@ -1,11 +1,26 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaBolt, FaFire, FaStar, FaRegStar } from 'react-icons/fa';
+import { FaShoppingCart, FaBolt, FaFire, FaStar, FaRegStar, FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useCartModal } from '../context/CartModalContext';
 import { api } from '../services/api';
 import '../styles/FeaturedDeals.css';
+
+// ── Helpers de stock ────────────────────────────────────────────────────────
+const needsConsultation = (product) =>
+  !product.stock_verified && product.stock >= 1 && product.stock <= 2;
+
+const getWhatsAppUrl = (product) => {
+  const msg =
+    `Hola! Quisiera consultar si el siguiente producto está disponible para compra:\n\n` +
+    `📦 Código: ${product.code || product.id}\n` +
+    `📝 Producto: ${product.name}\n` +
+    (product.description ? `📋 Descripción: ${product.description}\n` : '') +
+    `\n¿Está disponible para comprar?`;
+  return `https://wa.me/51957833503?text=${encodeURIComponent(msg)}`;
+};
+// ───────────────────────────────────────────────────────────────────────────
 
 function DealCard({ product, onAddToCart, initialFavorite }) {
   const { user } = useAuth();
@@ -13,30 +28,30 @@ function DealCard({ product, onAddToCart, initialFavorite }) {
   const { showCartModal } = useCartModal();
   const [isFavorite, setIsFavorite] = useState(initialFavorite || product?.isFavorite || false);
 
-  const hasDiscount = product.discount_percent > 0 || product.discount_amount > 0;
+  const hasDiscount  = product.discount_percent > 0 || product.discount_amount > 0;
+  const outOfStock   = product.stock === 0;
+  const consultar    = needsConsultation(product);
+  const whatsappUrl  = getWhatsAppUrl(product);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (onAddToCart) {
       onAddToCart(product);
-      showCartModal(product); // ← Mostrar modal
+      showCartModal(product);
     }
   };
 
   const handleToggleFavorite = async (e) => {
     e.stopPropagation();
     e.preventDefault();
-
     if (!user) {
       addToast("Debes iniciar sesión para guardar favoritos", "error");
       return;
     }
-
     const newState = !isFavorite;
     setIsFavorite(newState);
     addToast(newState ? "Agregado a Favoritos ⭐" : "Eliminado de Favoritos", newState ? "success" : "info");
-
     try {
       const result = await api.toggleFavorite(user.uid, product.id);
       if (!result) setIsFavorite(!newState);
@@ -77,7 +92,7 @@ function DealCard({ product, onAddToCart, initialFavorite }) {
           loading="lazy"
           onError={(e) => { e.target.src = 'https://placehold.co/300x300?text=Sin+Imagen'; }}
         />
-        {product.stock === 0 && (
+        {outOfStock && (
           <div className="deal-out-of-stock">Agotado</div>
         )}
       </div>
@@ -100,16 +115,40 @@ function DealCard({ product, onAddToCart, initialFavorite }) {
         </div>
       </div>
 
-      <button
-        type="button"
-        className="deal-cart-btn"
-        onClick={handleAddToCart}
-        disabled={product.stock === 0}
-        aria-label="Agregar al carrito"
-      >
-        <FaShoppingCart />
-        <span>Agregar</span>
-      </button>
+      {/* ── Botón principal del deal card ── */}
+      {outOfStock ? (
+        <button
+          type="button"
+          className="deal-cart-btn"
+          disabled
+          aria-label="Agotado"
+        >
+          <FaShoppingCart />
+          <span>Agotado</span>
+        </button>
+      ) : consultar ? (
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="deal-cart-btn deal-whatsapp-btn"
+          onClick={(e) => e.stopPropagation()}
+          aria-label="Consultar disponibilidad por WhatsApp"
+        >
+          <FaWhatsapp />
+          <span className="deal-btn-text">Consultar Stock</span>
+        </a>
+      ) : (
+        <button
+          type="button"
+          className="deal-cart-btn"
+          onClick={handleAddToCart}
+          aria-label="Agregar al carrito"
+        >
+          <FaShoppingCart />
+          <span>Agregar</span>
+        </button>
+      )}
     </Link>
   );
 }

@@ -1,11 +1,25 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import { FaShoppingCart, FaStar, FaHeart, FaRegHeart, FaRegStar } from 'react-icons/fa';
+import { FaShoppingCart, FaStar, FaRegStar, FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useCartModal } from '../context/CartModalContext';
 import { api } from '../services/api';
 import '../styles/ProductCard.css';
+
+// ── Helpers de stock ────────────────────────────────────────────────────────
+const needsConsultation = (product) =>
+  !product.stock_verified && product.stock >= 1 && product.stock <= 2;
+
+const getWhatsAppUrl = (product) => {
+  const msg =
+    `Hola! Quisiera consultar si el siguiente producto está disponible para compra:\n\n` +
+    `Código: ${product.code || product.id}\n` +
+    `Producto: ${product.name}\n` +
+    `\n¿Está disponible para comprar?`;
+  return `https://wa.me/51957833503?text=${encodeURIComponent(msg)}`;
+};
+// ───────────────────────────────────────────────────────────────────────────
 
 export function ProductCard({ product, onAddToCart }) {
   const { user } = useAuth();
@@ -15,9 +29,11 @@ export function ProductCard({ product, onAddToCart }) {
   const [imageSrc, setImageSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const imgRef = useRef(null);
-  const navigate = useNavigate();
 
-  // Función auxiliar para generar la URL de ImageKit
+  const outOfStock     = product.stock === 0;
+  const consultar      = needsConsultation(product);
+  const whatsappUrl    = getWhatsAppUrl(product);
+
   const getOptimizedUrl = (url) => {
     if (!url) return 'https://placehold.co/300x300?text=Sin+Imagen';
     if (!url.includes('imgur.com')) return url;
@@ -38,14 +54,8 @@ export function ProductCard({ product, onAddToCart }) {
           const optimizedSrc = getOptimizedUrl(originalSrc);
 
           const tempImg = new Image();
-          tempImg.onload = () => {
-            setImageSrc(optimizedSrc);
-            setIsLoading(false);
-          };
-          tempImg.onerror = () => {
-            setImageSrc(originalSrc);
-            setIsLoading(false);
-          };
+          tempImg.onload = () => { setImageSrc(optimizedSrc); setIsLoading(false); };
+          tempImg.onerror = () => { setImageSrc(originalSrc); setIsLoading(false); };
           tempImg.src = optimizedSrc;
           observer.unobserve(container);
         }
@@ -61,23 +71,20 @@ export function ProductCard({ product, onAddToCart }) {
     e.stopPropagation();
     if (onAddToCart) {
       onAddToCart(product);
-      showCartModal(product); // ← Mostrar modal
+      showCartModal(product);
     }
   };
 
   const handleToggleFavorite = async (e) => {
     e.stopPropagation();
     e.preventDefault();
-
     if (!user) {
       addToast("Debes iniciar sesión para guardar favoritos", "error");
       return;
     }
-
     const newState = !isFavorite;
     setIsFavorite(newState);
     addToast(newState ? "Agregado a Favoritos ⭐" : "Eliminado de Favoritos", newState ? "success" : "info");
-
     try {
       const result = await api.toggleFavorite(user.uid, product.id);
       if (!result) setIsFavorite(!newState);
@@ -108,17 +115,36 @@ export function ProductCard({ product, onAddToCart }) {
             {isLoading && <div className="image-skeleton"></div>}
           </div>
 
-          {product.stock === 0 && <div className="out-of-stock">Agotado</div>}
+          {outOfStock && <div className="out-of-stock">Agotado</div>}
 
           <div className="product-overlay">
-            <button
-              type="button"
-              className="add-to-cart-btn"
-              onClick={handleAddToCart}
-              disabled={product.stock === 0}
-            >
-              <FaShoppingCart /> <span className="btn-text">Agregar</span>
-            </button>
+            {outOfStock ? (
+              /* Agotado — botón deshabilitado */
+              <button type="button" className="add-to-cart-btn" disabled>
+                <FaShoppingCart /> <span className="btn-text">Agotado</span>
+              </button>
+            ) : consultar ? (
+              /* Consultar stock — abre WhatsApp */
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="add-to-cart-btn whatsapp-overlay-btn"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FaWhatsapp />
+                <span className="btn-text">Consultar Stock</span>
+              </a>
+            ) : (
+              /* Normal — agregar al carrito */
+              <button
+                type="button"
+                className="add-to-cart-btn"
+                onClick={handleAddToCart}
+              >
+                <FaShoppingCart /> <span className="btn-text">Agregar</span>
+              </button>
+            )}
           </div>
         </div>
 

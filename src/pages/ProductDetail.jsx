@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { FaStar, FaRegStar } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaWhatsapp } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
@@ -9,6 +9,20 @@ import { api } from '../services/api';
 import { ProductSlider } from '../components/ProductSlider';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import '../styles/ProductDetail.css';
+
+// ── Helpers de stock ────────────────────────────────────────────────────────
+const needsConsultation = (product) =>
+  !product.stock_verified && product.stock >= 1 && product.stock <= 2;
+
+const getWhatsAppUrl = (product) => {
+  const msg =
+    `Hola! Quisiera consultar si el siguiente producto está disponible para compra:\n\n` +
+    `Código: ${product.code || product.id}\n` +
+    `Producto: ${product.name}\n` +
+    `\n¿Está disponible para comprar?`;
+  return `https://wa.me/51957833503?text=${encodeURIComponent(msg)}`;
+};
+// ───────────────────────────────────────────────────────────────────────────
 
 export function ProductDetail() {
   const { id } = useParams();
@@ -27,7 +41,6 @@ export function ProductDetail() {
   const MAX_QTY = 2;
   const qtyTooltipRef = useRef(null);
 
-  // Cerrar tooltip al hacer click en cualquier lado
   useEffect(() => {
     if (!showQtyTooltip) return;
     const handler = (e) => {
@@ -107,6 +120,11 @@ export function ProductDetail() {
   if (loading) return <LoadingSpinner size="large" text="Cargando producto..." />;
   if (!product) return <div className="error">Producto no encontrado</div>;
 
+  // ── Estado del botón principal ──────────────────────────────────────────
+  const outOfStock      = product.stock === 0;
+  const consultarStock  = needsConsultation(product);
+  // ───────────────────────────────────────────────────────────────────────
+
   return (
     <div className="product-detail-page">
       <div className="detail-container">
@@ -118,7 +136,6 @@ export function ProductDetail() {
             alt={product.name}
             onClick={() => setShowImageModal(true)}
           />
-          {/* Botón favorito flotante — solo visible en mobile (CSS lo muestra/oculta) */}
           <div className="product-title-with-favorite">
             <button
               type="button"
@@ -132,14 +149,9 @@ export function ProductDetail() {
           </div>
         </div>
 
-        {/* ── Panel de información ──
-            En DESKTOP: orden natural (título → código → metadata → footer)
-            En MOBILE: CSS reordena con `order` para mostrar
-                       título → footer(precio+botón) → código → metadata
-            sin cambiar el HTML, solo con CSS flex order.             ── */}
+        {/* ── Panel de información ── */}
         <div className="detail-info">
 
-          {/* Orden natural 1 / Mobile order 1: Título + favorito (desktop) */}
           <div className="product-title-with-favorite">
             <h1 title={product.name}>{product.name}</h1>
             <button
@@ -153,12 +165,10 @@ export function ProductDetail() {
             </button>
           </div>
 
-          {/* Orden natural 2 / Mobile order 3: Código */}
           <div className="description">
             <p><span className="code-label">Código:</span> {product.code}</p>
           </div>
 
-          {/* Orden natural 3 / Mobile order 4: Metadata (marca, categoría, subcategoría) */}
           <div className="product-metadata">
             {product.marca && product.marca !== 'Sin marca' && (
               <div className="metadata-item">
@@ -178,8 +188,6 @@ export function ProductDetail() {
             )}
           </div>
 
-          {/* Orden natural 4 / Mobile order 2: Precio + cantidad + botón
-              En mobile sube al tope gracias a `order: 2` en CSS              */}
           <div className="detail-footer">
             <div className="price-section">
               {product.discount_amount > 0 ? (
@@ -193,53 +201,72 @@ export function ProductDetail() {
               )}
             </div>
 
-            <div className="quantity-section">
-              <label>Cantidad:</label>
-              <div className="quantity-control">
-                <button
-                  type="button"
-                  className="qty-btn"
-                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  aria-label="Disminuir cantidad"
-                >−</button>
-                <span className="qty-value">{quantity}</span>
-                <button
-                  type="button"
-                  className="qty-btn"
-                  onClick={() => {
-                    if (quantity >= MAX_QTY) {
-                      setShowQtyTooltip(true);
-                      setTimeout(() => setShowQtyTooltip(false), 4000);
-                    } else {
-                      setQuantity(q => q + 1);
-                    }
-                  }}
-                  aria-label="Aumentar cantidad"
-                >+</button>
+            {/* Selector de cantidad solo cuando se puede agregar al carrito */}
+            {!outOfStock && !consultarStock && (
+              <div className="quantity-section">
+                <label>Cantidad:</label>
+                <div className="quantity-control">
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                    aria-label="Disminuir cantidad"
+                  >−</button>
+                  <span className="qty-value">{quantity}</span>
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    onClick={() => {
+                      if (quantity >= MAX_QTY) {
+                        setShowQtyTooltip(true);
+                        setTimeout(() => setShowQtyTooltip(false), 4000);
+                      } else {
+                        setQuantity(q => q + 1);
+                      }
+                    }}
+                    aria-label="Aumentar cantidad"
+                  >+</button>
+                </div>
+                <div className="qty-info-wrapper" ref={qtyTooltipRef}>
+                  <button
+                    type="button"
+                    className="qty-info-btn"
+                    onClick={() => setShowQtyTooltip(v => !v)}
+                    title="Información sobre el límite de cantidad"
+                  >ℹ</button>
+                  {showQtyTooltip && (
+                    <div className="qty-tooltip">
+                      Si desea más de 2 productos, genere su pedido y al contactar con nosotros mencionelo y editamos su pedido.
+                      <button className="qty-tooltip-close" onClick={() => setShowQtyTooltip(false)}>×</button>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="qty-info-wrapper" ref={qtyTooltipRef}>
-                <button
-                  type="button"
-                  className="qty-info-btn"
-                  onClick={() => setShowQtyTooltip(v => !v)}
-                  title="Información sobre el límite de cantidad"
-                >ℹ</button>
-                {showQtyTooltip && (
-                  <div className="qty-tooltip">
-                    Si desea más de 2 productos, genere su pedido y al contactar con nosotros mencionelo y editamos su pedido.
-                    <button className="qty-tooltip-close" onClick={() => setShowQtyTooltip(false)}>×</button>
-                  </div>
-                )}
-              </div>
-            </div>
+            )}
 
-            <button
-              className="add-to-cart"
-              onClick={handleAddToCart}
-              disabled={product.stock === 0}
-            >
-              {product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
-            </button>
+            {/* ── Botón principal: Agotado / Consultar Stock / Agregar ── */}
+            {outOfStock ? (
+              <button className="add-to-cart" disabled>
+                Agotado
+              </button>
+            ) : consultarStock ? (
+              <a
+                href={getWhatsAppUrl(product)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="add-to-cart whatsapp-btn"
+              >
+                <FaWhatsapp size={20} />
+                Consultar Stock
+              </a>
+            ) : (
+              <button
+                className="add-to-cart"
+                onClick={handleAddToCart}
+              >
+                Agregar al Carrito
+              </button>
+            )}
           </div>
 
         </div>
@@ -251,7 +278,6 @@ export function ProductDetail() {
           {product.description && (
             <div className="detailed-description">
               <h2>Descripción Detallada</h2>
-              {/* Cada oración (separada por ". ") en su propia línea */}
               <div className={`desc-text${showFullDesc ? ' desc-expanded' : ''}`}>
                 {product.description
                   .split(/\.\s+/)
@@ -263,7 +289,6 @@ export function ProductDetail() {
                   ))
                 }
               </div>
-              {/* Botón solo visible en mobile via CSS */}
               <button
                 className="ver-mas-btn"
                 onClick={() => setShowFullDesc(v => !v)}

@@ -281,6 +281,9 @@
   background: #fffdf0;
 }
 
+.icon-mobile-only  { display: none; }
+.icon-desktop-only { display: inline-block; }
+
 /* ============================================
    RESPONSIVE - MÓVIL
    ============================================ */
@@ -294,6 +297,9 @@
     transform: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
+
+  .icon-mobile-only  { display: inline-block; }
+  .icon-desktop-only { display: none; }
 
   /* Imagen con dimensiones fijas en móvil */
   .product-image-container {
@@ -509,5 +515,60 @@
     padding: 0.25rem 0.5rem;
     top: 4px;
     left: 4px;
+  }
+}
+
+/* Hover suave para botones WhatsApp */
+a.deal-whatsapp-btn:hover,
+a.whatsapp-overlay-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+/* ── WhatsApp overlay button en ProductCard ── */
+a.whatsapp-overlay-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #1db954 0%, #25D366 50%, #128C7E 100%);
+  color: #fff;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(37, 211, 102, 0.35);
+  pointer-events: auto;
+  position: relative;
+  z-index: 25;
+}
+
+a.whatsapp-overlay-btn:hover {
+  background: linear-gradient(135deg, #128C7E 0%, #25D366 50%, #1db954 100%);
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.50);
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  a.whatsapp-overlay-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.45);
+  }
+
+  a.whatsapp-overlay-btn .btn-text {
+    display: none;
+  }
+
+  a.whatsapp-overlay-btn svg {
+    width: 18px;
+    height: 18px;
   }
 }

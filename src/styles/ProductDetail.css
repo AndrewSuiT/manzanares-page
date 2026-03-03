@@ -353,6 +353,28 @@
   text-transform: none;
 }
 
+/* ── Variante WhatsApp (verde degradado) ── */
+.add-to-cart.whatsapp-btn {
+  background: linear-gradient(135deg, #1db954 0%, #25D366 50%, #128C7E 100%);
+  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.40);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.add-to-cart.whatsapp-btn:hover {
+  background: linear-gradient(135deg, #128C7E 0%, #25D366 50%, #1db954 100%);
+  box-shadow: 0 6px 24px rgba(37, 211, 102, 0.52);
+  transform: translateY(-2px);
+}
+
+.add-to-cart.whatsapp-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(37, 211, 102, 0.35);
+}
+
 /* ============================================================
    SECCIÓN INFERIOR — Descripción + Especificaciones
    ============================================================ */
