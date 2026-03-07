@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCviwqiqT2Nm6dYAclLMeF7yRgdyDqP8MU",
-  authDomain: "manzapp-ace38.firebaseapp.com",
+  authDomain: "auth.manzanares.pe",
   projectId: "manzapp-ace38",
   storageBucket: "manzapp-ace38.firebasestorage.app",
   messagingSenderId: "405582019817",
