@@ -106,21 +106,27 @@ class API {
   }
 
   async trackEvent(eventType, productId, category, clientId = null) {
-    try {
-      await fetch(`${API_URL}/api/track`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event_type: eventType,
-          product_id: productId,
-          category,
-          client_id: clientId,
-          timestamp: new Date().toISOString()
-        })
-      });
-    } catch (error) {
-      console.error('Error en trackEvent:', error);
-    }
+    // Generar/recuperar un ID anónimo si no hay usuario
+    const resolvedClientId = clientId ?? (() => {
+      let anonId = localStorage.getItem('anon_id');
+      if (!anonId) {
+        anonId = 'anon_' + crypto.randomUUID();
+        localStorage.setItem('anon_id', anonId);
+      }
+      return anonId;
+    })();
+
+    await fetch(`${API_URL}/api/track`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_type: eventType,
+        product_id: productId,
+        category,
+        client_id: resolvedClientId,  // ← Nunca será null
+        timestamp: new Date().toISOString()
+      })
+    });
   }
 
   async toggleFavorite(clientId, productId) {
@@ -371,6 +377,19 @@ class API {
     } catch (error) {
       console.error('Error en clearRemoteCart:', error);
     }
+  }
+
+  async mergeTrackingEvents(anonId, userId) {
+    const response = await fetch(`${API_URL}/api/track/merge`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        anon_id: anonId,
+        user_id: userId
+      })
+    });
+    if (!response.ok) throw new Error('Error merging tracking');
+    return await response.json();
   }
 }
 

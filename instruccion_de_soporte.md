@@ -1,0 +1,1 @@
+sudo journalctl -u fastapi_app -n 50 --no-pager
