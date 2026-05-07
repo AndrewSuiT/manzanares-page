@@ -63,6 +63,23 @@
   margin: 0;
 }
 
+/* Animación de entrada escalonada para cards */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-card-wrapper {
+  /* Participa en el grid normalmente para que la animación sea visible */
+  min-width: 0;
+}
+
 /* Grid de productos destacados - Desktop */
 .products-grid-home {
   display: grid;

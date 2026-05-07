@@ -91,11 +91,15 @@ class API {
     }
   }
 
-  async getHomeRecommendations(clientId = null, limit = 8) {
+  async getHomeRecommendations(clientId = null, limit = 8, excludeIds = [], sessionSeed = null) {
     try {
       const params = new URLSearchParams({ limit });
       if (clientId) params.append('client_id', clientId);
-      
+      if (sessionSeed) params.append('session_seed', sessionSeed);
+      if (excludeIds && excludeIds.length > 0) {
+        params.append('exclude_ids', excludeIds.join(','));
+      }
+
       const response = await fetch(`${API_URL}/api/recommendations/home?${params}`);
       if (!response.ok) throw new Error('Error fetching recommendations');
       return await response.json();

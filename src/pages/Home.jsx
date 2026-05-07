@@ -29,6 +29,7 @@ export function Home() {
   // Estados de carga separados para percepción de velocidad
   const [products, setProducts] = useState([]);
   const [recsLoading, setRecsLoading] = useState(true); // Solo para recomendaciones
+  const [visibleCount, setVisibleCount] = useState(4);
 
   const [favorites, setFavorites] = useState([]);
   const [favsLoading, setFavsLoading] = useState(false); // Carga independiente de favoritos
@@ -123,13 +124,17 @@ export function Home() {
     // B. CARGA DE RECOMENDACIONES (General)
     const loadRecs = async () => {
       try {
-        setRecsLoading(true); // Aseguramos que el spinner de productos se active
+        setRecsLoading(true);
         const data = await api.getHomeRecommendations(userId);
         setProducts(data);
+        setVisibleCount(4);
+        // Revelar en lotes cosméticos: el backend ya respondió, solo es animación
+        setTimeout(() => setVisibleCount(8), 120);
+        setTimeout(() => setVisibleCount(12), 240);
       } catch (error) {
         console.error('Error loading recommendations:', error);
       } finally {
-        setRecsLoading(false); // Solo apaga el spinner de la grilla principal
+        setRecsLoading(false);
       }
     };
 
@@ -226,12 +231,20 @@ export function Home() {
                 </div>
               ) : products.length > 0 ? (
                 <div className="products-grid-home">
-                  {products.slice(0, 12).map((product) => (
-                    <ProductCard
+                  {products.slice(0, visibleCount).map((product, index) => (
+                    <div
                       key={product.id}
-                      product={product}
-                      onAddToCart={handleAddToCart}
-                    />
+                      className="product-card-wrapper"
+                      style={{
+                        animation: 'fadeSlideIn 0.3s ease both',
+                        animationDelay: `${(index % 4) * 50}ms`,
+                      }}
+                    >
+                      <ProductCard
+                        product={product}
+                        onAddToCart={handleAddToCart}
+                      />
+                    </div>
                   ))}
                 </div>
               ) : (
