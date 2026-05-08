@@ -9,6 +9,7 @@ import { ProductSlider } from '../components/ProductSlider';
 import { SplashScreen } from '../components/SplashScreen';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { FeaturedDeals } from '../components/FeaturedDeals';
+import { HomeBanner } from '../components/HomeBanner';
 import { useCart } from '../context/CartContext';
 import { api } from '../services/api';
 import '../styles/Home.css';
@@ -170,6 +171,9 @@ export function Home() {
         <h1 className="sr-only">Catálogo de Productos Manzanares S.A.C. - Compra sin salir de Casa</h1>
 
         <Carousel images={promotions} />
+
+        {/* Banner angosto entre Carousel y secciones — se activa desde Firestore (banners/home_banner) */}
+        <HomeBanner />
 
         <section className="home-content">
           <div className="sidebar-products">

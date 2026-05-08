@@ -1,0 +1,184 @@
+/* ================================================================
+   HomeBanner.css
+   Proporción Desktop : 1398 × 54 px  →  aspect-ratio: 1398/54
+   Proporción Mobile  :  426 × 24 px  →  aspect-ratio: 426/24
+   ================================================================ */
+
+/* ── Contenedor exterior ────────────────────────────────────────── */
+.home-banner-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  margin: 1.2rem auto 0;
+  padding: 0 1rem;
+  /* Perspectiva para dar profundidad al flip */
+  perspective: 900px;
+}
+
+/* ── Tarjeta animada ────────────────────────────────────────────── */
+.home-banner-card {
+  width: 100%;
+  /* Proporción escritorio: 1398/54 ≈ 25.9 : 1 */
+  aspect-ratio: 1398 / 54;
+  border-radius: 8px;
+  overflow: hidden;
+  transform-origin: center center;
+  will-change: transform, opacity;
+
+  /* Sombra sutil para dar presencia al banner */
+  box-shadow:
+    0 2px 8px rgba(0, 100, 220, 0.10),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Estados de animación ───────────────────────────────────────── */
+
+/* Sin animación */
+.home-banner-card--idle {
+  transform: perspective(900px) rotateX(0deg);
+  opacity: 1;
+}
+
+/* Salida: la tarjeta se "dobla" hacia arriba (borde superior hacia atrás) */
+.home-banner-card--out {
+  animation: hb-flip-out 0.36s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+
+/* Entrada: la nueva imagen baja desde detrás */
+.home-banner-card--in {
+  animation: hb-flip-in 0.36s cubic-bezier(0.0, 0, 0.2, 1) forwards;
+}
+
+@keyframes hb-flip-out {
+  from {
+    transform: perspective(900px) rotateX(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: perspective(900px) rotateX(88deg);
+    opacity: 0;
+  }
+}
+
+@keyframes hb-flip-in {
+  from {
+    transform: perspective(900px) rotateX(-88deg);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(900px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+/* ── Link y imagen ──────────────────────────────────────────────── */
+.home-banner-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  outline: none;
+}
+
+/* <picture> debe ocupar todo el espacio del link */
+.home-banner-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.home-banner-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Solo muestra cursor pointer cuando hay link real */
+.home-banner-link--clickable {
+  cursor: pointer;
+}
+
+/* ── Indicadores de puntos ──────────────────────────────────────── */
+.home-banner-dots {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+}
+
+.home-banner-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.home-banner-dot--active {
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.3);
+}
+
+/* ================================================================
+   RESPONSIVE — Mobile
+   ================================================================ */
+@media (max-width: 768px) {
+  .home-banner-wrapper {
+    margin: 0.6rem 0 0;
+    padding: 0;
+    perspective: 600px;
+    border-radius: 0;
+  }
+
+  .home-banner-card {
+    /* Proporción móvil: 426/24 ≈ 17.75 : 1 */
+    aspect-ratio: 426 / 24;
+    border-radius: 0;
+    box-shadow: 0 1px 4px rgba(0, 80, 180, 0.10);
+  }
+
+  @keyframes hb-flip-out {
+    from {
+      transform: perspective(600px) rotateX(0deg);
+      opacity: 1;
+    }
+    to {
+      transform: perspective(600px) rotateX(88deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes hb-flip-in {
+    from {
+      transform: perspective(600px) rotateX(-88deg);
+      opacity: 0;
+    }
+    to {
+      transform: perspective(600px) rotateX(0deg);
+      opacity: 1;
+    }
+  }
+
+  .home-banner-dots {
+    bottom: 2px;
+    gap: 3px;
+  }
+
+  .home-banner-dot {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-banner-wrapper {
+    margin-top: 0.4rem;
+  }
+}
