@@ -2,25 +2,25 @@
    ProductDetail — Variables de color (armonía con Home.css)
    ============================================================ */
 :root {
-  --pd-blue-main:    #667eea;
-  --pd-blue-dark:    #764ba2;
-  --pd-blue-accent:  #0066cc;
-  --pd-blue-light:   #e0f6ff;
-  --pd-blue-mid:     #d4f0ff;
+  --pd-blue-main:    #ea6699;
+  --pd-blue-dark:    #a24b76;
+  --pd-blue-accent:  #cc0066;
+  --pd-blue-light:   #ffe0f4;
+  --pd-blue-mid:     #ffd4ef;
   --pd-orange:       #f37c2c;
   --pd-text-dark:    #1a2c42;
   --pd-text-mid:     #4a5568;
   --pd-text-soft:    #95a5a6;
   --pd-border:       #e8edf5;
-  --pd-shadow-card:  0 4px 24px rgba(102, 126, 234, 0.10);
-  --pd-shadow-btn:   0 4px 18px rgba(102, 126, 234, 0.38);
+  --pd-shadow-card:  0 4px 24px rgba(234, 102, 154, 0.10);
+  --pd-shadow-btn:   0 4px 18px rgba(234, 102, 154, 0.38);
 }
 
 /* ============================================================
    PÁGINA — Fondo igual al Home
    ============================================================ */
 .product-detail-page {
-  background: linear-gradient(135deg, #e0f6ff 0%, #d4f0ff 50%, #c8eaff 100%);
+  background: linear-gradient(135deg, #ffe0f4 0%, #ffd4ef 50%, #ffc8ea 100%);
   min-height: 100vh;
   padding: 2rem 1.5rem;
 }
@@ -50,7 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #eef5ff 0%, #f0f8ff 100%);
+  background: linear-gradient(135deg, #ffeef5 0%, #fff0f8 100%);
   border-radius: 14px;
   overflow: hidden;
   width: 100%;
@@ -145,8 +145,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  background: #eef5ff;
-  border: 1px solid #d0e4ff;
+  background: #ffeef5;
+  border: 1px solid #ffd0e4;
   border-radius: 20px;
   padding: 0.28rem 0.7rem;
   font-size: 0.8rem;
@@ -207,7 +207,7 @@
   flex-direction: column;
   gap: 1.2rem;
   background: linear-gradient(135deg, #f0f5ff 0%, #f5f0ff 100%);
-  border: 1.5px solid #dde5ff;
+  border: 1.5px solid #ffdde5;
   border-radius: 14px;
   padding: 1.4rem;
   margin-top: auto;
@@ -275,7 +275,7 @@
 .quantity-control {
   display: flex;
   align-items: center;
-  border: 2px solid #c9d8f0;
+  border: 2px solid #f0c9d8;
   border-radius: 10px;
   overflow: hidden;
   background: white;
@@ -320,7 +320,7 @@
 
 /* ── Botón agregar al carrito — degradado azul ── */
 .add-to-cart {
-  background: linear-gradient(135deg, #4a90e2 0%, var(--pd-blue-main) 50%, var(--pd-blue-dark) 100%);
+  background: linear-gradient(135deg, #e24a90 0%, var(--pd-blue-main) 50%, var(--pd-blue-dark) 100%);
   color: white;
   border: none;
   padding: 0.95rem 1.5rem;
@@ -329,21 +329,21 @@
   font-weight: 800;
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 18px rgba(74, 144, 226, 0.40);
+  box-shadow: 0 4px 18px rgba(226, 74, 144, 0.40);
   letter-spacing: 0.04em;
   width: 100%;
   text-transform: uppercase;
 }
 
 .add-to-cart:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--pd-blue-dark) 0%, var(--pd-blue-main) 50%, #4a90e2 100%);
-  box-shadow: 0 6px 24px rgba(74, 144, 226, 0.52);
+  background: linear-gradient(135deg, var(--pd-blue-dark) 0%, var(--pd-blue-main) 50%, #e24a90 100%);
+  box-shadow: 0 6px 24px rgba(226, 74, 144, 0.52);
   transform: translateY(-2px);
 }
 
 .add-to-cart:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(74, 144, 226, 0.35);
+  box-shadow: 0 2px 10px rgba(226, 74, 144, 0.35);
 }
 
 .add-to-cart:disabled {
@@ -549,7 +549,7 @@
   /* Fondo degradado suave igual que Home en mobile */
   .product-detail-page {
     padding: 0;
-    background: linear-gradient(180deg, #d4f0ff 0%, #f0f6ff 40%, #f4f7fb 100%);
+    background: linear-gradient(180deg, #ffd4ef 0%, #f0f6ff 40%, #f4f7fb 100%);
     padding-bottom: 1.5rem;
   }
 
@@ -616,7 +616,7 @@
     padding: 1rem 0.9rem 0.75rem;
     position: relative;
     z-index: 2;
-    box-shadow: 0 -4px 18px rgba(102, 126, 234, 0.10);
+    box-shadow: 0 -4px 18px rgba(234, 102, 154, 0.10);
 
     /* Flex column con order — reordena sin tocar el JSX */
     display: flex;
@@ -656,7 +656,7 @@
     margin-top: 0;
     border-radius: 13px;
     background: linear-gradient(135deg, #f0f5ff 0%, #f5f0ff 100%);
-    border: 1.5px solid #dde5ff;
+    border: 1.5px solid #ffdde5;
   }
 
   .price-detail {
@@ -701,7 +701,7 @@
     padding: 0.82rem;
     font-size: 0.93rem;
     border-radius: 10px;
-    box-shadow: 0 3px 13px rgba(102, 126, 234, 0.32);
+    box-shadow: 0 3px 13px rgba(234, 102, 154, 0.32);
   }
 
   /* ── ORDER 3: Código ── */
@@ -831,8 +831,8 @@
 
 .qty-info-btn {
   background: none;
-  border: 1.5px solid #667eea;
-  color: #667eea;
+  border: 1.5px solid #ea6699;
+  color: #ea6699;
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -849,7 +849,7 @@
 }
 
 .qty-info-btn:hover {
-  background: #667eea;
+  background: #ea6699;
   color: white;
 }
 

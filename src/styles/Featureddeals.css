@@ -7,12 +7,12 @@
   margin-bottom: 2.5rem;
   border-radius: 16px;
   overflow: hidden;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #e8f7ff 100%);
-  border: 2px solid rgba(0, 140, 255, 0.4);
+  background: linear-gradient(135deg, #ffffff 0%, #fff0f9 50%, #ffe8f7 100%);
+  border: 2px solid rgba(220, 0, 110, 0.4);
   box-shadow:
-    0 0 0 1px rgba(0, 150, 255, 0.2),
-    0 4px 32px rgba(0, 140, 255, 0.12),
-    inset 0 1px 0 rgba(0, 200, 255, 0.1);
+    0 0 0 1px rgba(220, 0, 110, 0.2),
+    0 4px 32px rgba(220, 0, 110, 0.12),
+    inset 0 1px 0 rgba(255, 100, 200, 0.1);
   padding: 2rem 1.8rem 1.8rem;
 }
 
@@ -21,8 +21,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 140, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 140, 255, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(220, 0, 110, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(220, 0, 110, 0.08) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
   animation: gridShift 20s linear infinite;
@@ -41,7 +41,7 @@
   right: -40px;
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, rgba(0, 140, 255, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(220, 0, 110, 0.1) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -52,7 +52,7 @@
   left: -40px;
   width: 160px;
   height: 160px;
-  background: radial-gradient(circle, rgba(0, 140, 255, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(220, 0, 110, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -92,13 +92,13 @@
   font-weight: 900;
   margin: 0;
   letter-spacing: 0.5px;
-  color: #0066cc;
+  color: #cc0066;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .deals-subtitle {
   font-size: 0.85rem;
-  color: #0080cc;
+  color: #cc0080;
   margin: 0 0 0.8rem;
   letter-spacing: 0.3px;
 }
@@ -107,8 +107,8 @@
   width: 80px;
   height: 2px;
   margin: 0 auto;
-  background: linear-gradient(90deg, transparent, #0088ff, transparent);
-  box-shadow: 0 0 6px rgba(0, 140, 255, 0.4);
+  background: linear-gradient(90deg, transparent, #ff3399, transparent);
+  box-shadow: 0 0 6px rgba(220, 0, 110, 0.4);
   border-radius: 2px;
 }
 
@@ -140,8 +140,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #f5fbff 0%, #e8f4ff 100%);
-  border: 1.5px solid rgba(0, 140, 255, 0.3);
+  background: linear-gradient(135deg, #f5fbff 0%, #ffe8f4 100%);
+  border: 1.5px solid rgba(220, 0, 110, 0.3);
   border-radius: 12px;
   overflow: hidden;
   text-decoration: none;
@@ -152,10 +152,10 @@
 
 .deal-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(0, 140, 255, 0.6);
+  border-color: rgba(220, 0, 110, 0.6);
   box-shadow:
-    0 0 0 1px rgba(0, 140, 255, 0.3),
-    0 8px 32px rgba(0, 140, 255, 0.2),
+    0 0 0 1px rgba(220, 0, 110, 0.3),
+    0 8px 32px rgba(220, 0, 110, 0.2),
     0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -165,7 +165,7 @@
   inset: 0;
   border-radius: 12px;
   opacity: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(0, 140, 255, 0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(220, 0, 110, 0.08) 0%, transparent 70%);
   transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: 0;
@@ -186,20 +186,20 @@
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  background: linear-gradient(135deg, #0066ff, #00aaff);
+  background: linear-gradient(135deg, #ff3388, #ff44aa);
   color: #fff;
   font-size: 0.7rem;
   font-weight: 900;
   letter-spacing: 0.5px;
   padding: 0.3rem 0.6rem;
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 120, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(220, 0, 110, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
   animation: badgePulse 3s ease-in-out infinite;
 }
 
 @keyframes badgePulse {
-  0%, 100% { box-shadow: 0 2px 8px rgba(0, 120, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2); }
-  50%       { box-shadow: 0 4px 12px rgba(0, 140, 255, 0.5), 0 2px 5px rgba(0, 0, 0, 0.25); }
+  0%, 100% { box-shadow: 0 2px 8px rgba(220, 0, 110, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2); }
+  50%       { box-shadow: 0 4px 12px rgba(220, 0, 110, 0.5), 0 2px 5px rgba(0, 0, 0, 0.25); }
 }
 
 .deal-badge-icon {
@@ -219,14 +219,14 @@
   height: 32px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(0, 140, 255, 0.2);
+  border: 1px solid rgba(220, 0, 110, 0.2);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #b0c4d8;
+  color: #d8b0c4;
   font-size: 0.95rem;
   padding: 0;
 }
@@ -324,7 +324,7 @@
 
 .deal-category {
   font-size: 0.7rem;
-  color: #0066cc;
+  color: #cc0066;
   text-transform: uppercase;
   letter-spacing: 0.6px;
   font-weight: 600;
@@ -355,7 +355,7 @@
 .deal-price-now {
   font-size: 1.35rem;
   font-weight: 900;
-  color: #0088ff;
+  color: #ff3399;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -379,21 +379,21 @@
   padding: 0.6rem 0;
   border: none;
   border-radius: 7px;
-  background: linear-gradient(135deg, #0055dd, #0088ff);
+  background: linear-gradient(135deg, #dd0055, #ff3399);
   color: #fff;
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 10px rgba(0, 120, 255, 0.3);
+  box-shadow: 0 2px 10px rgba(220, 0, 110, 0.3);
   position: relative;
   z-index: 1;
   letter-spacing: 0.2px;
 }
 
 .deal-cart-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #0066ff, #00aaff);
-  box-shadow: 0 4px 16px rgba(0, 140, 255, 0.4);
+  background: linear-gradient(135deg, #ff3388, #ff44aa);
+  box-shadow: 0 4px 16px rgba(220, 0, 110, 0.4);
   transform: translateY(-1px);
 }
 

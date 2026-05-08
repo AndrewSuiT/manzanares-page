@@ -111,8 +111,8 @@
 
 .load-more-btn {
   background: white;
-  border: 1px solid #667eea;
-  color: #667eea;
+  border: 1px solid #ea6699;
+  color: #ea6699;
   padding: 0.8rem 2rem;
   border-radius: 30px;
   font-weight: 600;
@@ -121,7 +121,7 @@
 }
 
 .load-more-btn:hover { 
-  background: #667eea; 
+  background: #ea6699; 
   color: white; 
 }
 
@@ -234,9 +234,9 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 0.9rem;
-    border: 2px solid #667eea;
+    border: 2px solid #ea6699;
     background: white;
-    color: #667eea;
+    color: #ea6699;
     border-radius: 8px;
     font-weight: 700;
     font-size: 0.95rem;
@@ -245,7 +245,7 @@
   }
 
   .mobile-btn:active {
-    background: #667eea;
+    background: #ea6699;
     color: white;
     transform: scale(0.98);
   }
@@ -304,7 +304,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ea6699 0%, #a24b76 100%);
     color: white;
     position: sticky;
     top: 0;

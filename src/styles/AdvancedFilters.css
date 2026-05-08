@@ -136,7 +136,7 @@
 
 /* 2. Cuando está marcado (checked), pintamos el borde de tu color */
 .radio-group input[type="radio"]:checked {
-  border-color: #667eea;
+  border-color: #ea6699;
 }
 
 /* 3. Dibujamos el punto central */
@@ -147,7 +147,7 @@
   border-radius: 50%;
   transform: scale(0); /* Oculto por defecto */
   transition: 0.2s transform ease-in-out;
-  background-color: #667eea; /* TU COLOR */
+  background-color: #ea6699; /* TU COLOR */
 }
 
 /* 4. Hacemos aparecer el punto al marcarlo */
@@ -202,7 +202,7 @@
   height: 18px; 
   width: 18px;
   border-radius: 50%;
-  background: #667eea;
+  background: #ea6699;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   cursor: pointer;
 }
@@ -215,7 +215,7 @@
   height: 18px; 
   width: 18px;
   border-radius: 50%;
-  background: #667eea;
+  background: #ea6699;
   border: none;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   cursor: pointer;
@@ -239,7 +239,7 @@
   position: absolute;
   top: 0; 
   bottom: 0;
-  background: #667eea;
+  background: #ea6699;
   border-radius: 3px;
   z-index: 2;
 }
@@ -263,7 +263,7 @@
 }
 
 .checkbox-label input { 
-  accent-color: #667eea; 
+  accent-color: #ea6699; 
   width: 16px; 
   height: 16px; 
 }
@@ -283,8 +283,7 @@
 
 /* Marca el background cuando el radio está seleccionado */
 .radio-group label:has(input[type="radio"]:checked) {
-  background-color: #f0f2ff;
-  color: #667eea;
+  background-color: #fff0f8;
+  color: #ea6699;
   font-weight: 500;
 }
-

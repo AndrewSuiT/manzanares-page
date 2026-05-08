@@ -31,9 +31,9 @@
   background: #fff;
   border-radius: 18px;
   box-shadow:
-    0 0 0 1px rgba(0, 120, 255, 0.12),
+    0 0 0 1px rgba(220, 0, 110, 0.12),
     0 24px 60px rgba(0, 0, 0, 0.25),
-    0 8px 20px rgba(0, 100, 220, 0.15);
+    0 8px 20px rgba(200, 0, 100, 0.15);
   overflow: hidden;
   
   /* 1. CAMBIO AQUÍ: Cambiar 'auto' por 'none' */
@@ -71,8 +71,8 @@
   align-items: center;
   gap: 0.7rem;
   padding: 1.1rem 1.1rem 0.9rem;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e8f4ff 100%);
-  border-bottom: 1px solid rgba(0, 140, 255, 0.12);
+  background: linear-gradient(135deg, #fff0f9 0%, #ffe8f4 100%);
+  border-bottom: 1px solid rgba(220, 0, 110, 0.12);
 }
 
 .cart-modal-check {
@@ -143,8 +143,8 @@
   width: 80px;
   height: 80px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #f0f9ff, #e4f1ff);
-  border: 1px solid rgba(0, 140, 255, 0.15);
+  background: linear-gradient(135deg, #fff0f9, #ffe4f1);
+  border: 1px solid rgba(220, 0, 110, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -179,7 +179,7 @@
 .cart-modal-product-price {
   font-size: 1.2rem;
   font-weight: 900;
-  color: #0088ff;
+  color: #ff3399;
   margin: 0;
 }
 
@@ -195,10 +195,10 @@
 .cart-modal-btn-secondary {
   flex: 1;
   padding: 0.72rem 0.5rem;
-  border: 1.5px solid rgba(0, 120, 255, 0.3);
+  border: 1.5px solid rgba(220, 0, 110, 0.3);
   border-radius: 10px;
   background: transparent;
-  color: #0066cc;
+  color: #cc0066;
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
@@ -206,8 +206,8 @@
 }
 
 .cart-modal-btn-secondary:hover {
-  background: rgba(0, 120, 255, 0.06);
-  border-color: rgba(0, 120, 255, 0.5);
+  background: rgba(220, 0, 110, 0.06);
+  border-color: rgba(220, 0, 110, 0.5);
 }
 
 .cart-modal-btn-primary {
@@ -215,7 +215,7 @@
   padding: 0.72rem 0.5rem;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #0055dd, #0088ff);
+  background: linear-gradient(135deg, #dd0055, #ff3399);
   color: white;
   font-size: 0.82rem;
   font-weight: 700;
@@ -225,12 +225,12 @@
   justify-content: center;
   gap: 0.4rem;
   transition: all 0.2s;
-  box-shadow: 0 4px 14px rgba(0, 120, 255, 0.35);
+  box-shadow: 0 4px 14px rgba(220, 0, 110, 0.35);
 }
 
 .cart-modal-btn-primary:hover {
-  background: linear-gradient(135deg, #0066ff, #00aaff);
-  box-shadow: 0 6px 18px rgba(0, 140, 255, 0.45);
+  background: linear-gradient(135deg, #ff3388, #ff44aa);
+  box-shadow: 0 6px 18px rgba(220, 0, 110, 0.45);
   transform: translateY(-1px);
 }
 

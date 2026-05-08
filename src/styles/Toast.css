@@ -34,8 +34,8 @@
 }
 
 .toast-info {
-  border-left-color: #3498db;
-  background: #f0f8ff;
+  border-left-color: #db3498;
+  background: #fff0f8;
 }
 
 .toast-close {

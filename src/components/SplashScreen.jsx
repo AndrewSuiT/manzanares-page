@@ -28,8 +28,8 @@ export function SplashScreen({ isVisible }) {
 
         {/* Texto */}
         <div className="splash-text">
-          <h1>Manzanares</h1>
-          <p>Cargando...</p>
+          <h1>FELIZ DÍA DE LA MADRE</h1>
+          <p>les desea Manzanares SAC</p>
         </div>
 
         {/* Animación de carga */}
