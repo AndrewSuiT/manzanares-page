@@ -62,7 +62,7 @@ export function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p>Manzanares &copy; 2025 Creado por ATP.</p>
+        <p>Manzanares &copy; 2025 Creado por <a href="mailto:andersontapia47@gmail.com">ATP</a>.</p>
       </div>
     </footer>
   );
